@@ -1,0 +1,960 @@
+[{
+  "_id": 1,
+  "field": "javascript",
+  "technology": "Languages"
+},
+{
+  "_id": 2,
+  "field": "html",
+  "technology": "Languages"
+},
+{
+  "_id": 3,
+  "field": "css",
+  "technology": "Languages"
+},
+{
+  "_id": 4,
+  "field": "python",
+  "technology": "Languages"
+},
+{
+  "_id": 5,
+  "field": "java ",
+  "technology": "Languages"
+},
+{
+  "_id": 6,
+  "field": "bash",
+  "technology": "Languages"
+},
+{
+  "_id": 7,
+  "field": "shell",
+  "technology": "Languages"
+},
+{
+  "_id": 8,
+  "field": "powershell",
+  "technology": "Languages"
+},
+{
+  "_id": 9,
+  "field": "c#",
+  "technology": "Languages"
+},
+{
+  "_id": 10,
+  "field": "php",
+  "technology": "Languages"
+},
+{
+  "_id": 11,
+  "field": "typescript",
+  "technology": "Languages"
+},
+{
+  "_id": 12,
+  "field": "c++",
+  "technology": "Languages"
+},
+{
+  "_id": 13,
+  "field": "c",
+  "technology": "Languages"
+},
+{
+  "_id": 14,
+  "field": "go",
+  "technology": "Languages"
+},
+{
+  "_id": 15,
+  "field": "kotlin",
+  "technology": "Languages"
+},
+{
+  "_id": 16,
+  "field": "ruby",
+  "technology": "Languages"
+},
+{
+  "_id": 17,
+  "field": "assembly",
+  "technology": "Languages"
+},
+{
+  "_id": 18,
+  "field": "vba",
+  "technology": "Languages"
+},
+{
+  "_id": 19,
+  "field": "swift",
+  "technology": "Languages"
+},
+{
+  "_id": 20,
+  "field": "r",
+  "technology": "Languages"
+},
+{
+  "_id": 21,
+  "field": "rust",
+  "technology": "Languages"
+},
+{
+  "_id": 22,
+  "field": "objective-c",
+  "technology": "Languages"
+},
+{
+  "_id": 23,
+  "field": "dart",
+  "technology": "Languages"
+},
+{
+  "_id": 24,
+  "field": "scala",
+  "technology": "Languages"
+},
+{
+  "_id": 25,
+  "field": "perl",
+  "technology": "Languages"
+},
+{
+  "_id": 26,
+  "field": "haskell",
+  "technology": "Languages"
+},
+{
+  "_id": 27,
+  "field": "julia",
+  "technology": "Languages"
+},
+{
+  "_id": 28,
+  "field": "elixir",
+  "technology": "Languages"
+},
+{
+  "_id": 29,
+  "field": "clojure",
+  "technology": "Languages"
+},
+{
+  "_id": 30,
+  "field": "webassembly",
+  "technology": "Languages"
+},
+{
+  "_id": 31,
+  "field": "f#",
+  "technology": "Languages"
+},
+{
+  "_id": 32,
+  "field": "erlang",
+  "technology": "Languages"
+},
+{
+  "_id": 33,
+  "field": "matlab",
+  "technology": "Languages"
+},
+{
+  "_id": 34,
+  "field": "groovy",
+  "technology": "Languages"
+},
+{
+  "_id": 35,
+  "field": "hack",
+  "technology": "Languages"
+},
+{
+  "_id": 36,
+  "field": "ocaml",
+  "technology": "Languages"
+},
+{
+  "_id": 37,
+  "field": "visual-basic-6",
+  "technology": "Languages"
+},
+{
+  "_id": 38,
+  "field": "cobol",
+  "technology": "Languages"
+},
+{
+  "_id": 39,
+  "field": "coffeescript",
+  "technology": "Languages"
+},
+{
+  "_id": 40,
+  "field": "vb.net",
+  "technology": "Languages"
+},
+{
+  "_id": 41,
+  "field": "lua",
+  "technology": "Languages"
+},
+{
+  "_id": 42,
+  "field": "object-pascal",
+  "technology": "Languages"
+},
+{
+  "_id": 43,
+  "field": "smalltalk",
+  "technology": "Languages"
+},
+{
+  "_id": 44,
+  "field": "common-lisp",
+  "technology": "Languages"
+},
+{
+  "_id": 45,
+  "field": "coldfusion",
+  "technology": "Languages"
+},
+{
+  "_id": 46,
+  "field": "abap",
+  "technology": "Languages"
+},
+{
+  "_id": 47,
+  "field": "c++11",
+  "technology": "Languages"
+},
+{
+  "_id": 48,
+  "field": "fortran",
+  "technology": "Languages"
+},
+{
+  "_id": 49,
+  "field": "graphql",
+  "technology": "Languages"
+},
+{
+  "_id": 50,
+  "field": "prolog",
+  "technology": "Languages"
+},
+{
+  "_id": 51,
+  "field": "sql",
+  "technology": "Languages"
+},
+{
+  "_id": 52,
+  "field": "jquery",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 53,
+  "field": "reactjs",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 54,
+  "field": "angular",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 55,
+  "field": "asp.net",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 56,
+  "field": "express",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 57,
+  "field": "asp.net-core",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 58,
+  "field": "vue.js",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 59,
+  "field": "vuejs",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 60,
+  "field": "spring",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 61,
+  "field": "angularjs",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 62,
+  "field": "django",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 63,
+  "field": "flask",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 64,
+  "field": "laravel",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 65,
+  "field": "ruby-on-rails",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 66,
+  "field": "symfony",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 67,
+  "field": "gatsby",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 68,
+  "field": "drupal",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 69,
+  "field": "xamarin",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 70,
+  "field": "node.js",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 71,
+  "field": ".net",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 72,
+  "field": ".net-core",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 73,
+  "field": ".net core",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 74,
+  "field": "net-core",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 75,
+  "field": "react-native",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 76,
+  "field": "nestjs",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 77,
+  "field": "rollupjs",
+  "technology": "Web Frameworks"
+},
+{
+  "_id": 78,
+  "field": "pandas",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 79,
+  "field": "tensorflow",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 80,
+  "field": "ansible",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 81,
+  "field": "keras",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 82,
+  "field": "apache-spark",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 83,
+  "field": "torch",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 84,
+  "field": "pytorch",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 85,
+  "field": "hadoop",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 86,
+  "field": "pyspark",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 87,
+  "field": "apache-kafka",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 88,
+  "field": "talend",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 89,
+  "field": "apache-flink",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 90,
+  "field": "flink",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 91,
+  "field": "powerbi",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 92,
+  "field": "hive",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 93,
+  "field": "hbase",
+  "technology": "Big Data - ML"
+},
+{
+  "_id": 94,
+  "field": "visual-studio-code",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 95,
+  "field": "visual-studio",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 96,
+  "field": "intellij",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 97,
+  "field": "vim",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 98,
+  "field": "android-studio",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 99,
+  "field": "eclipse",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 100,
+  "field": "pycharm",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 101,
+  "field": "atom",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 102,
+  "field": "ipython",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 103,
+  "field": "jupyter",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 104,
+  "field": "jupyter-notebook",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 105,
+  "field": "xcode",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 106,
+  "field": "netbeans",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 107,
+  "field": "emacs",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 108,
+  "field": "rstudio",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 109,
+  "field": "coda",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 110,
+  "field": "komodo",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 111,
+  "field": "zend",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 112,
+  "field": "delphi",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 113,
+  "field": "ionic-framework",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 114,
+  "field": "flutter",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 115,
+  "field": "cordova",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 116,
+  "field": "qt",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 117,
+  "field": "maven",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 118,
+  "field": "terraform",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 119,
+  "field": "qtquick",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 120,
+  "field": "google-developers-console",
+  "technology": "Developer Tools"
+},
+{
+  "_id": 121,
+  "field": "github",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 122,
+  "field": "slack",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 123,
+  "field": "jira",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 124,
+  "field": "google-suite",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 125,
+  "field": "gitlab",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 126,
+  "field": "confluence",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 127,
+  "field": "trello",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 128,
+  "field": "microsoft-teams",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 129,
+  "field": "azure",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 130,
+  "field": "git",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 131,
+  "field": "perforce",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 132,
+  "field": "svn",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 133,
+  "field": "mercurial",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 134,
+  "field": "cvs",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 135,
+  "field": "puppet",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 136,
+  "field": "chef",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 137,
+  "field": "k6",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 138,
+  "field": "puppeteer",
+  "technology": "Collaboration Tools"
+},
+{
+  "_id": 139,
+  "field": "unity",
+  "technology": "Platforms"
+},
+{
+  "_id": 140,
+  "field": "unreal-engine",
+  "technology": "Platforms"
+},
+{
+  "_id": 141,
+  "field": "cryengine",
+  "technology": "Platforms"
+},
+{
+  "_id": 142,
+  "field": "linux",
+  "technology": "Platforms"
+},
+{
+  "_id": 143,
+  "field": "windows",
+  "technology": "Platforms"
+},
+{
+  "_id": 144,
+  "field": "docker",
+  "technology": "Platforms"
+},
+{
+  "_id": 145,
+  "field": "aws",
+  "technology": "Platforms"
+},
+{
+  "_id": 146,
+  "field": "android",
+  "technology": "Platforms"
+},
+{
+  "_id": 147,
+  "field": "macos",
+  "technology": "Platforms"
+},
+{
+  "_id": 148,
+  "field": "raspberry-pi",
+  "technology": "Platforms"
+},
+{
+  "_id": 149,
+  "field": "wordpress",
+  "technology": "Platforms"
+},
+{
+  "_id": 150,
+  "field": "google-cloud-platform",
+  "technology": "Platforms"
+},
+{
+  "_id": 151,
+  "field": "ios",
+  "technology": "Platforms"
+},
+{
+  "_id": 152,
+  "field": "kubernetes",
+  "technology": "Platforms"
+},
+{
+  "_id": 153,
+  "field": "herocu",
+  "technology": "Platforms"
+},
+{
+  "_id": 154,
+  "field": "arduino",
+  "technology": "Platforms"
+},
+{
+  "_id": 155,
+  "field": "slack-apps",
+  "technology": "Platforms"
+},
+{
+  "_id": 156,
+  "field": "slack-integrations",
+  "technology": "Platforms"
+},
+{
+  "_id": 157,
+  "field": "ibm-watson",
+  "technology": "Platforms"
+},
+{
+  "_id": 158,
+  "field": "serverless",
+  "technology": "Platforms"
+},
+{
+  "_id": 159,
+  "field": "sharepoint",
+  "technology": "Platforms"
+},
+{
+  "_id": 160,
+  "field": "esp8266",
+  "technology": "Platforms"
+},
+{
+  "_id": 161,
+  "field": "salesforce",
+  "technology": "Platforms"
+},
+{
+  "_id": 162,
+  "field": "google-home",
+  "technology": "Platforms"
+},
+{
+  "_id": 163,
+  "field": "mainframe",
+  "technology": "Platforms"
+},
+{
+  "_id": 164,
+  "field": "predix",
+  "technology": "Platforms"
+},
+{
+  "_id": 165,
+  "field": "windows-phone",
+  "technology": "Platforms"
+},
+{
+  "_id": 166,
+  "field": "lamp",
+  "technology": "Platforms"
+},
+{
+  "_id": 167,
+  "field": "ubuntu",
+  "technology": "Platforms"
+},
+{
+  "_id": 168,
+  "field": "debian",
+  "technology": "Platforms"
+},
+{
+  "_id": 169,
+  "field": "fedora",
+  "technology": "Platforms"
+},
+{
+  "_id": 170,
+  "field": "amazon-web-services",
+  "technology": "Platforms"
+},
+{
+  "_id": 171,
+  "field": "amazon-rds",
+  "technology": "Platforms"
+},
+{
+  "_id": 172,
+  "field": "hazelcast",
+  "technology": "Platforms"
+},
+{
+  "_id": 173,
+  "field": "mysql",
+  "technology": "Databases"
+},
+{
+  "_id": 174,
+  "field": "postgresql",
+  "technology": "Databases"
+},
+{
+  "_id": 175,
+  "field": "sql-server",
+  "technology": "Databases"
+},
+{
+  "_id": 176,
+  "field": "firebase",
+  "technology": "Databases"
+},
+{
+  "_id": 177,
+  "field": "mongodb",
+  "technology": "Databases"
+},
+{
+  "_id": 178,
+  "field": "redis",
+  "technology": "Databases"
+},
+{
+  "_id": 179,
+  "field": "mariadb",
+  "technology": "Databases"
+},
+{
+  "_id": 180,
+  "field": "oracle",
+  "technology": "Databases"
+},
+{
+  "_id": 181,
+  "field": "elasticsearch",
+  "technology": "Databases"
+},
+{
+  "_id": 182,
+  "field": "dynamodb",
+  "technology": "Databases"
+},
+{
+  "_id": 183,
+  "field": "cassandra",
+  "technology": "Databases"
+},
+{
+  "_id": 184,
+  "field": "couchbase",
+  "technology": "Databases"
+},
+{
+  "_id": 185,
+  "field": "cosmosdb",
+  "technology": "Databases"
+},
+{
+  "_id": 186,
+  "field": "neo4j",
+  "technology": "Databases"
+},
+{
+  "_id": 187,
+  "field": "hive",
+  "technology": "Databases"
+},
+{
+  "_id": 188,
+  "field": "google-bigquery",
+  "technology": "Databases"
+},
+{
+  "_id": 189,
+  "field": "aurora",
+  "technology": "Databases"
+},
+{
+  "_id": 190,
+  "field": "memcached",
+  "technology": "Databases"
+},
+{
+  "_id": 191,
+  "field": "amazon-dynamodb",
+  "technology": "Databases"
+},
+{
+  "_id": 192,
+  "field": "sqlite",
+  "technology": "Databases"
+}]

@@ -1,0 +1,2 @@
+FLASK_APP=LLMsite
+FLASK_ENV=production

@@ -1,0 +1,2664 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CovidFlow Dashboard</title>
+
+    <!-- Add the svg in the path "covidsite/static/favicon.svg" as a favicon -->
+    <link rel="icon" href="{{ url_for('static',filename='favicon.svg') }}" type="image/svg+xml">
+    <!-- Custom fonts for this template-->
+    <link href="{{ url_for('static',filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
+          type="text/css">
+    <link href="{{ url_for('static',filename='tooltip.css') }}" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+
+    <!-- Custom styles for this template-->
+    <link href="{{ url_for('static',filename='sb-admin-2.min.css') }}" rel="stylesheet">
+    <style>
+        .rotate-icon {
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .collapsed .rotate-icon {
+            transform: rotate(-180deg);
+        }
+    </style>
+
+
+</head>
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion " id="accordionSidebar">
+        <br>
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+            <!--<div class="sidebar-brand-text mx-3">CovidVis</div>-->
+            <img src="{{ url_for('static',filename='covidvis.svg') }}" alt="CovidVis" width="200" height="100">
+        </a>
+        <br>
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <!-- Nav Item - Dashboard -->
+        <div class="sticky-top">
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Charts
+            </div>
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#lineChartRelatedSearches">
+                    <span>Line Chart Of Covid-19 Related Searches</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#questionDistributionChart">
+                    <span>Question Distribution</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#wordCloudChart">
+                    <span>Wordcloud Of Most Used Tags</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#barChartTags">
+                    <span>Barchart Of Most Used Tags</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#worldMap">
+                    <span>User World Map</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#radarChartTechnologies">
+                    <span>Radar Chart Of Most Used Tags</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#doughnutChart">
+                    <span>Doughnut Chart of Questions Containing Code Snippets</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#top10QuestionsTable">
+                    <span>Top 10 Questions</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#top10UsersTable">
+                    <span>Top 10 Users</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#topicsDerived">
+                    <span>Topics Derived From Questions</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#chordDiagram">
+                    <span>Chord Diagram</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#top10InclusionIndex">
+                    <span>Top 10 Co-occuring tags based on the Inclusion Index</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#medianTimesTable">
+                    <span>Median time elapsed until the first answer per Competence Group</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#survivalCurves">
+                    <span>Survival Curves</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#questionDistributionPerGroupChart">
+                    <span>Question Distribution per Competence group</span>
+                </a>
+            </li>
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline" style="padding-left: 60px;">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </div>
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+            <nav class="navbar navbar-expand navbar-light bg-gray topbar mb-4 static-top ">
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+                
+            </nav>
+            
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Content Column -->
+                    <div class="col-xl-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="overview">
+                                <a type= "button"class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOverview">
+                                    <h6 class="m-0 font-weight-bold text-primary">Overview <i class="fas fa-chevron-up rotate-icon"></i></h6>  
+                                </a>
+                            </div>
+                            <div class="collapse" id="collapseOverview"> 
+                                <div class="card-body" >
+                                    <p class="text-justify">Covid-19 disrupted daily lives in many levels both societal and medical. With the medical community trying effortlessly to develop vaccines and contain the virus, a multitude of data was produced regarding cases, symptoms, vaccination numbers and regional information about each country. Recognizing the value of these data, the programming community came together in times of crisis and exchanged knowledge on how to process these data and develop solutions on their own. The members of the community were programmers, scientists, data analysts and many other individuals that contributed to the so-called Scientific Software Development (SSD) i.e. the development of software from scientific data aimed at scientific use.</p>
+    
+                                    <p class="text-justify"> One of the most popular hubs for knowledge exchange on COVID-19 SSD was Stack Overflow (<a href="https://stackoverflow.com">https://stackoverflow.com</a>), a place were developers can ask programming related questions and receive answers. For example, a COVID-19 SSD related question can be seen here: <a href="https://stackoverflow.com/questions/60956522/john-hopkins-arcgis-coronavirus-map-by-date">https://stackoverflow.com/questions/60956522/john-hopkins-arcgis-coronavirus-map-by-date</a></p>
+    
+                                    <p class="text-justify">We present CovidFlow, an informative dashboard that dynamically gathers COVID-19 SSD questions from Stack Overflow and profiles them based on multiple technological domains, topics, metadata and other fields. This dashboard is the result of our more recent works on the subject, which can be found below. </p>
+    
+                                    <p class="text-justify">[1] Georgiou, K., Mittas, N., Angelis, L., & Chatzigeorgiou, A. (2020, August). A preliminary study of knowledge sharing related to COVID-19 pandemic in Stack Overflow. In 2020 46th Euromicro Conference on Software Engineering and Advanced Applications (SEAA) (pp. 517-520). IEEE.</p>
+    
+                                    <p class="text-justify">[2] Georgiou, K., Mittas, N., Angelis, L., & Chatzigeorgiou, A. (2020). A Study of Knowledge Sharing related to Covid-19 Pandemic in Stack Overflow. arXiv preprint arXiv:2004.09495.</p>
+    
+                                    <p class="text-justify">[3] Georgiou, K., Mittas, N., Chatzigeorgiou, A., & Angelis, L. (2021). An empirical study of COVID-19 related posts on Stack Overflow: Topics and technologies. Journal of Systems and Software, 182, 111089.</p>
+    
+                                    <p class="text-justify">[4] Stakoulas, K., Georgiou, K., Mittas, N., & Angelis, L. (2021, November). An Analysis of User Profiles from Covid-19 Questions in Stack Overflow. In 25th Pan-Hellenic Conference on Informatics (pp. 419-424).</p>
+    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+                    <!-- Number of Questions Card  -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            Number Of Questions
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ question_count }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-question fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Number of Users Card  -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            Number Of Users
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ users }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-user fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Last Updated Card  -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-info shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                            Last Updated
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">2022-3-17</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Pending Requests Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-warning shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            Current Date
+                                        </div>
+                                        <div id="date" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+                    <!-- Number of Questions Card  -->
+                    <div class="col-xl-4 col-md-6 mb-4">
+                        <div class="card border-left-danger shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                            Average Number Of Comments
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ avgNumberOfComments }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-comment fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Number of Users Card  -->
+                    <div class="col-xl-4 col-md-6 mb-4">
+                        <div class="card border-left-secondary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+                                            Average Number Of Answers
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ avgNumberOfAnswers }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-reply fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6 mb-4">
+                        <div class="card border-left-light shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+                                            Average Number Of Votes
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ avgNumberOfVotes }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-arrow-up fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Pending Requests Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class=" col-xl-12 ">
+                      <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" >
+                          <h6 class="m-0 font-weight-bold text-primary">See Data For Specific Time Windows
+                            <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                              <span class="tooltiptext"> Define the time window you want to see data for.
+                              </span>
+                            </div>
+                          </h6>
+                        </div>
+                        <div class="card-body">
+                          <div class="row">
+                            <div class=" col-xl-4 ">
+                              <div class="md-form md-outline input-with-post-icon datepicker">
+                                <input placeholder="Select date" type="date" id="dateFrom" class="form-control" value="{{ date_from }}">
+                                <label for="dateFrom">Date From</label>
+                              </div>
+                            </div>
+                            <div class=" col-xl-4 ">
+                              <div class="md-form md-outline input-with-post-icon datepicker">
+                                <input placeholder="Select date" type="date" id="dateTo" class="form-control" value="{{ date_to }}">
+                                <label for="dateTo">Date To</label>
+                              </div>
+                            </div>
+                            <div class=" col-xl-2 ">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"  id="includeClosedQuestionsCheckbox">
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext">Include closed/deleted questions</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" col-xl-2 ">
+                              <button type="button" class="btn btn-primary" id="datepicker" >Search</button>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+                    <!-- Area Chart -->
+                    <div class=" col-xl-12 ">
+                        <div class="card shadow mb-4">
+                            <!-- Card Header - Dropdown -->
+                            <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                                    id="linelineChartRelatedSearchesChart">
+                                <h6 class="m-0 font-weight-bold text-primary">Line Chart Of Covid-19 Related Searches
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext">In the Daily Line Chart, the x-axis represents the dates that the question were asked
+                                         by the users and the y-axis represents the number of questions that were asked at that date, while in the
+                                             Cumulative Chart the y-axis represents the daily increase of the number of questions.</span>
+                                    </div>
+                                </h6>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="lineRadioOptions" id="lineRadio1"
+                                           value="daily" checked="checked">
+                                    <label class="form-check-label" for="lineRadio1">Daily</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="lineRadioOptions" id="lineRadio2"
+                                           value="cumulative">
+                                    <label class="form-check-label" for="lineRadio2">Cumulative</label>
+                                </div>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <canvas id="lineChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+                    <!-- Content Column -->
+                    <div class="col-xl-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="questionDistributionChart">
+                                <h6 class="m-0 font-weight-bold text-primary">Question Distribution
+                                    <div style="z-index: 10000 !important;" class="tooltip2"><i
+                                            class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext">
+                                            In each chart, the x-axis represents the number of votes, comments, answers or views that the question has, while the y-axis represents the number of questions that have that number of votes, comments, answers or views.
+                                        </span>
+                                    </div>   
+                                </h6>     
+                            </div>
+                            <div class="card-body" >
+                                <div style="display: flex;">
+                                    <div class="chart-area">
+                                        <canvas id="votesDistributionChart" height="150"></canvas>
+                                    </div>
+                                    <div class="chart-area">
+                                        <canvas id="commentsDistributionChart" height="150"></canvas>
+                                    </div>
+                                </div>
+                                <div style="display: flex;">
+                                    <div class="chart-area">
+                                        <canvas id="answersDistributionChart" height="150"></canvas>
+                                    </div>
+                                    <div class="chart-area">
+                                        <canvas id="viewsDistributionChart" height="150"></canvas>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+                    <!-- Content Column -->
+                    <div class="col-lg-6 mb-4">
+                        <!-- Project Card Example -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3" id="wordCloudChart">
+                                <h6 class="m-0 font-weight-bold text-primary">WordCloud of Most Used Tags
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext">This wordcloud contains the tags that were mostly preferred
+                                         from developers when labelling their questions</span>
+                                    </div>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area" id="wordCloudArea">
+                                    <div id="wordCloud"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3" id="barChartTags">
+                                <h6 class="m-0 font-weight-bold text-primary">Barchart of Most Used Tags
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext">This Bar Chart shows the top 10 tags used by the users</span>
+                                    </div>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <canvas id="barChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- Area Chart -->
+                    <div class=" col-xl-12 ">
+                        <div class="card shadow mb-4">
+                            <!-- Card Header - Dropdown -->
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                                 id="worldMap">
+                                <h6 class="m-0 font-weight-bold text-primary">User World Map
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext"> Number of questions asked by users in each place on the map</span>
+                                    </div>
+                                </h6>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                           id="inlineRadio1" value="pointMap" checked="checked">
+                                    <label class="form-check-label" for="inlineRadio1">Point Map</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                           id="inlineRadio2" value="heatMap">
+                                    <label class="form-check-label" for="inlineRadio2">Heat Map</label>
+                                </div>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <div class="chart-area" id="map">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+                    <!-- Content Column -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3" id="radarChartTechnologies">
+                                <h6 class="m-0 font-weight-bold text-primary">Radar Chart of Most Used Technologies
+                                    <div style="z-index: 10000 !important;" class="tooltip2"><i
+                                            class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext">This Radar Chart highlights which tags from each competence group are used more frequently in questions
+                                         based on the tags, the users chose</span>
+                                    </div>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <canvas id="radarChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3" id="doughnutChart">
+                                <h6 class="m-0 font-weight-bold text-primary" id="dougnutChartTitle">Doughnut Chart of Questions Containing Code Snippets </h6>
+                            </div>
+                            <div class="card-body">
+
+                                <div id="carouselDoughnut" class="carousel slide" data-ride="carousel" data-interval="10000">
+                                    <div class="carousel-inner">
+                                      <div class="carousel-item active" id="codeSnippet">
+                                        <div class="chart-area">
+                                            <canvas id="doughnutChartCodeSnippets" height="250"></canvas>
+                                        </div>
+                                      </div>
+                                      <div class="carousel-item" id="answered">
+                                        <div class="chart-area">
+                                            <canvas id="doughnutChartAnswered" height="250"></canvas>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <a class="carousel-control-prev" href="#carouselDoughnut" role="button" data-slide="prev">
+                                      <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color:#4e73df;"></span>
+                                      <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carouselDoughnut" role="button" data-slide="next">
+                                      <span class="carousel-control-next-icon" aria-hidden="true" style="background-color:#4e73df;"></span>
+                                      <span class="sr-only">Next</span>
+                                    </a>
+                                  </div>   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- Content Column -->
+                    <div class="col-lg-8 mb-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                                 id="top10QuestionsTable">
+                                <h6 class="m-0 font-weight-bold text-primary">Top 10 Questions By
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext"> Top 10 questions based on the selected
+                                         criteria</span>
+                                    </div>
+                                </h6>
+                                <div>
+                                    <select class="custom-select" id="classSelect" onchange="update()">
+                                        <option value="All">All</option>
+                                        <option value="Languages">Languages</option>
+                                        <option value="Web Frameworks">Frameworks</option>
+                                        <option value="Big Data - ML">Big Data - ML</option>
+                                        <option value="Databases">Databases</option>
+                                        <option value="Platforms">Platforms</option>
+                                        <option value="Collaboration Tools">Collaboration Tools</option>
+                                        <option value="Developer Tools">Developer Tools</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <select class="custom-select" id="topSelect" onchange="update()">
+                                        <option value="Votes">Votes</option>
+                                        <option value="Answers">Answers</option>
+                                        <option value="Comments">Comments</option>
+                                        <option value="Views">Views</option>
+                                        <option value="Minimum Response Time">Minimum Response Time</option>
+                                        <option value="Maximum Response Time">Maximum Response Time</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="topTable">
+                                    <table class="table table-striped" id="topTenTable" width="100%">
+                                        {#                                                    <thead>#}
+                                        {#                                                        <tr>#}
+                                        {#                                                          <th width="5%" scope="col">#</th>#}
+                                        {#                                                          <th width="85%" scope="col">Title</th>#}
+                                        {#                                                          <th width="10%" scope="col" >Votes</th>#}
+                                        {#                                                        </tr>#}
+                                        {#                                                      </thead>#}
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                                 id="top10UsersTable">
+                                <h6 class="m-0 font-weight-bold text-primary">Top 10 Users
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD
+                                         questions they asked</span>
+                                    </div>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="topTableUsers">
+                                    <table class="table table-striped" id="topTenTableUsers" width="100%">
+                                        <thead>
+                                        <tr>
+                                            <th width="5%" scope="col">#</th>
+                                            <th width="85%" scope="col">Username</th>
+                                            <th width="10%" scope="col">Questions</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class=" col-xl-12 ">
+                        <div class="card shadow mb-4">
+                            <!-- Card Header - Dropdown -->
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="topicsDerived">
+                                <h6 class="m-0 font-weight-bold text-primary">Topics Derived from Questions
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext">These figures contain the topics produced from the application of
+                                            the BertTopic and LDA algorithms on the question titles. In the first figure,
+                                            the points (which represent questions) are projected in a 2D space and showcase
+                                            the different communities (or topics).
+                                            In the third figure, the larger the circle, the most discussedis a topic while
+                                            the distances between topics indicate how similar (or dissimilar) they are.
+                                        </span>
+                                    </div>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <iframe style="width: 100%;height: 900px; " frameborder="0"
+                                        src="/get_lda"></iframe>
+                                <iframe style="width: 100%;height: 700px; " frameborder="0"
+                                        src="/get_lda2"></iframe>
+                                <iframe style="width: 100%;height: 700px; " frameborder="0"
+                                        src="/get_lda3"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <!-- Content Column -->
+                    <div class="col-xl-8">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="chordDiagram">
+                                <h6 class="m-0 font-weight-bold text-primary">Chord Diagram
+                                    <div style="z-index: 10000 !important;" class="tooltip2"><i
+                                            class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext">
+                                            This figure shows the relationships between the different tags. The larger and thicker the arc, the more
+                                            times are two tags used together in questions. The color of the chord corresponds to the
+                                            source tag.
+                                        </span>
+                                    </div>   
+                                </h6> 
+                                <div>
+                                    <select class="custom-select" id="classSelectChord">
+                                        <option value="All">All Groups</option>
+                                        <option value="Languages">Languages</option>
+                                        <option value="Web Frameworks">Web Frameworks</option>
+                                        <option value="Big Data - ML">Big Data - ML</option>
+                                        <option value="Databases">Databases</option>
+                                        <option value="Platforms">Platforms</option>
+                                        <option value="Collaboration Tools">Collaboration Tools</option>
+                                        <option value="Developer Tools">Developer Tools</option>
+                                    </select>
+                                </div>    
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <div id="my_dataviz" style="height: 900px; "></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 mb-4">
+                        <div class = "row"> 
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                                        id="top10InclusionIndex">
+                                    <h6 class="m-0 font-weight-bold text-primary">Top 10 Co-occuring tags based on the Inclusion Index
+                                        <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                            <span class="tooltiptext"> These are the top 10 pairs of tags appearing together in question based on
+                                            the Inclusion Index. The inclusion index is a metri that is calculated by dividing the total co-occurences
+                                            of two tags with the minimum frequency of each tag. It has a range of [0,1].</span>
+                                        </div>
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="topTableUsers">
+                                        <table class="table table-striped table-sm" id="topTenWeirdTagCombos" width="100%">
+                                            <thead>
+                                            <tr>
+                                                <th width="5%" scope="col">#</th>
+                                                <th width="85%" scope="col">Tag Combo</th>
+                                                <th width="10%" scope="col">Inclusion Index</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                                        id="medianTimesTable">
+                                    <h6 class="m-0 font-weight-bold text-primary">Median time elapsed until the first answer per Competence Group
+                                        <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                            <span class="tooltiptext"> This table contains the median time elapsed for a question to receive a first answer.
+                                            The higher the time, the more "difficult" a question can be considered. The median times are presented for all questions
+                                            and for each Competence Group.</span>
+                                        </div>
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="topTableUsers">
+                                        <table class="table table-striped table-sm" id="medianTimesPerCompetenceGroup" width="100%">
+                                            <thead>
+                                            <tr>
+                                                <th width="5%" scope="col">#</th>
+                                                <th width="85%" scope="col">Competence Group</th>
+                                                <th width="10%" scope="col">Median Time</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                </div>
+                <div class="row">
+                    <!-- Content Column -->
+                    <div class="col-xl-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="survivalCurves">
+                                <h6 class="m-0 font-weight-bold text-primary">Survival Curves
+                                    <div style="z-index: 10000 !important;" class="tooltip2"><i
+                                            class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext">
+                                            This figure shows the survival curves of different competence groups. The survival curve
+                                            shows the probability of a question being answered at a given elapsed time. The
+                                            x-axis shows the time in hours since the question was asked and the y-axis shows the
+                                            probability of the question being answered before this time. The higher the probability
+                                            and the smaller the time, the less difficult it is to answer questions belonging to that
+                                            competence group.
+                                        </span>
+                                    </div>   
+                                </h6> 
+                                
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <div id="survivalCurve" style="height: 800px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Row -->
+                <div class="row">
+                    <!-- Content Column -->
+                    <div class="col-xl-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="questionDistributionPerGroupChart">
+                                <h6 class="m-0 font-weight-bold text-primary">Question Distribution per Competence group
+                                    <div style="z-index: 10000 !important;" class="tooltip2"><i
+                                            class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext">
+                                            This figure shows the distribution of questions (Open-Closed-Deleted) per competence group. The larger the circle, the more
+                                            questions correspont to the three categories. The use can change the "All Groups" option to see the questions of a specific competence group.
+                                        </span>
+                                    </div>   
+                                </h6> 
+                                <div>
+                                    <select class="custom-select" id="groupSelect" onchange="changeGroup()">
+                                        <option value="All">All Groups</option>
+                                        <option value="Languages">Languages</option>
+                                        <option value="Web Frameworks">Web Frameworks</option>
+                                        <option value="Big Data - ML">Big Data - ML</option>
+                                        <option value="Databases">Databases</option>
+                                        <option value="Platforms">Platforms</option>
+                                        <option value="Collaboration Tools">Collaboration Tools</option>
+                                        <option value="Developer Tools">Developer Tools</option>
+                                    </select>
+                                </div>    
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <canvas id="polarChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Your Website 2020</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<script>
+    'use strict'
+    var tbl = document.getElementById('topTenTableUsers');
+    var tblBody = document.createElement("tbody");
+
+    var topTenUsers =
+    {{ top_10_distinct_users | safe }}
+    var count = 1;
+    for (const [key, value] of Object.entries(topTenUsers)) {
+        var row = document.createElement("tr");
+
+        var cell1 = document.createElement("th");
+        var cellText1 = document.createTextNode(count);
+        cell1.appendChild(cellText1);
+        row.appendChild(cell1);
+
+        var link = document.createElement("a");
+        link.setAttribute("href", key)
+        link.setAttribute("target", "blank_")
+        var linkText = document.createTextNode(key.split('/')[5]);
+        link.appendChild(linkText)
+
+        var cell2 = document.createElement("td");
+        cell2.appendChild(link);
+        row.appendChild(cell2);
+
+        var cell3 = document.createElement("td");
+        var cellText3 = document.createTextNode(value);
+        cell3.appendChild(cellText3);
+        row.appendChild(cell3);
+
+        tblBody.appendChild(row);
+        tbl.appendChild(tblBody);
+
+        count++;
+    }
+</script>
+
+<script>
+    'use strict'
+    var tbl = document.getElementById('topTenWeirdTagCombos');
+    var tblBody = document.createElement("tbody");
+
+    var topTenInclusionIndex = {{ top_10_inclusion_index | safe }}
+    var count = 1;
+    for (const [key, value] of Object.entries(topTenInclusionIndex)) {
+        var row = document.createElement("tr");
+
+        var cell1 = document.createElement("th");
+        var cellText1 = document.createTextNode(count);
+        cell1.appendChild(cellText1);
+        row.appendChild(cell1);
+
+        var cell2 = document.createElement("td");
+        var cellText2 = document.createTextNode(key);
+        cell2.appendChild(cellText2);
+        row.appendChild(cell2);
+
+        var cell3 = document.createElement("td");
+        var cellText3 = document.createTextNode(value);
+        cell3.appendChild(cellText3);
+        row.appendChild(cell3);
+
+        tblBody.appendChild(row);
+        tbl.appendChild(tblBody);
+
+        count++;
+    }
+</script>
+
+<script>
+    'use strict'
+    var tbl = document.getElementById('medianTimesPerCompetenceGroup');
+    var tblBody = document.createElement("tbody");
+
+    var meanTimesDict = {{ median_times_dict | safe }}
+    var count = 1;
+    for (const [key, value] of Object.entries(meanTimesDict)) {
+        var row = document.createElement("tr");
+
+        var cell1 = document.createElement("th");
+        var cellText1 = document.createTextNode(count);
+        cell1.appendChild(cellText1);
+        row.appendChild(cell1);
+
+        var cell2 = document.createElement("td");
+        var cellText2 = document.createTextNode(key);
+        cell2.appendChild(cellText2);
+        row.appendChild(cell2);
+
+        var cell3 = document.createElement("td");
+        var cellText3 = document.createTextNode(value + ' min');
+        cell3.appendChild(cellText3);
+        row.appendChild(cell3);
+
+        tblBody.appendChild(row);
+        tbl.appendChild(tblBody);
+
+        count++;
+    }
+</script>
+
+<script>
+    'use strict'
+    var tbl = document.getElementById('topTenTable');
+    var tblHead = document.createElement("thead");
+
+    var hrow = document.createElement("tr");
+
+    var hcell1 = document.createElement("th");
+    var hcellText1 = document.createTextNode("#");
+    hcell1.appendChild(hcellText1);
+    hrow.appendChild(hcell1);
+
+    var hcell2 = document.createElement("th");
+    var hcellText2 = document.createTextNode("Title");
+    hcell2.appendChild(hcellText2);
+    hrow.appendChild(hcell2);
+
+    var hcell3 = document.createElement("th");
+    var hcellText3 = document.createTextNode("Votes");
+    hcell3.appendChild(hcellText3);
+    hrow.appendChild(hcell3);
+
+    tblHead.appendChild(hrow);
+    tbl.appendChild(tblHead);
+
+    var tblBody = document.createElement("tbody");
+
+    let topTen =
+    {{ top_10_sorted_ids_and_votes | safe }}
+    var count = 1;
+    for (const [key, value] of Object.entries(topTen)) {
+        var row = document.createElement("tr");
+
+        var cell1 = document.createElement("th");
+        var cellText1 = document.createTextNode(count);
+        cell1.appendChild(cellText1);
+        row.appendChild(cell1);
+
+        var link = document.createElement("a");
+        link.setAttribute("href", key)
+        link.setAttribute("target", "blank_")
+        var linkText = document.createTextNode(value[1]);
+        link.appendChild(linkText)
+
+        var cell2 = document.createElement("td");
+        cell2.appendChild(link);
+        row.appendChild(cell2);
+
+        var cell3 = document.createElement("td");
+        var cellText3 = document.createTextNode(value [0]);
+        cell3.appendChild(cellText3);
+        row.appendChild(cell3);
+
+        tblBody.appendChild(row);
+        tbl.appendChild(tblBody);
+
+        count++;
+    }
+
+    function update() {
+
+        $("#topTenTable").empty();
+        var selectClass = document.getElementById('classSelect').value;
+        var select = document.getElementById('topSelect').value;
+        var techClass;
+        var items;
+        if (selectClass === "Languages") {
+            if (select === "Votes") {
+                var name = "Votes";
+                topTen =
+                {{ top_10_languages_votes | safe }}
+            } else if (select === "Answers") {
+                var name = "Answers";
+                topTen =
+                {{ top_10_languages_answers | safe }}
+            } else if (select === "Comments") {
+                var name = "Comments";
+                topTen =
+                {{ top_10_languages_comments | safe }}
+            } else if (select === "Views") {
+                var name = "Views";
+                topTen =
+                {{ top_10_languages_views | safe }}
+            } else if (select === "Minimum Response Time"){
+                var name = "Minimum Response Time";
+                topTen =
+                {{ top_10_languages_response_time | safe }}
+            }else {
+                var name = "Maximum Response Time";
+                topTen =
+                {{ top_10_languages_response_time_reverse | safe }}
+            }
+        } else if (selectClass === "Web Frameworks") {
+            if (select === "Votes") {
+                var name = "Votes";
+                topTen =
+                {{ top_10_web_frameworks_votes | safe }}
+            } else if (select === "Answers") {
+                var name = "Answers";
+                topTen =
+                {{ top_10_web_frameworks_answers | safe }}
+            } else if (select === "Comments") {
+                var name = "Comments";
+                topTen =
+                {{ top_10_web_frameworks_comments | safe }}
+            } else if (select === "Views"){
+                var name = "Views";
+                topTen =
+                {{ top_10_web_frameworks_views | safe }}
+            } else if (select === "Minimum Response Time") {
+                var name = "Minimum Response Time";
+                topTen =
+                {{ top_10_web_frameworks_response_time | safe }}
+            }else {
+                var name = "Maximum Response Time";
+                topTen =
+                {{ top_10_web_frameworks_response_time_reverse | safe }}
+            }
+        } else if (selectClass === "Big Data - ML") {
+            if (select === "Votes") {
+                var name = "Votes";
+                topTen =
+                {{ top_10_big_data_ml_votes | safe }}
+            } else if (select === "Answers") {
+                var name = "Answers";
+                topTen =
+                {{ top_10_big_data_ml_answers | safe }}
+            } else if (select === "Comments") {
+                var name = "Comments";
+                topTen =
+                {{ top_10_big_data_ml_comments | safe }}
+            } else if (select === "Views"){
+                var name = "Views";
+                topTen =
+                {{ top_10_big_data_ml_views | safe }}
+            } else if (select === "Minimum Response Time") {
+                var name = "Minimum Response Time";
+                topTen =
+                {{ top_10_big_data_ml_response_time | safe }}
+            }else {
+                var name = "Maximum Response Time";
+                topTen =
+                {{ top_10_big_data_ml_response_time_reverse | safe }}
+            }
+        } else if (selectClass === "Databases") {
+            if (select === "Votes") {
+                var name = "Votes";
+                topTen =
+                {{ top_10_databases_votes | safe }}
+            } else if (select === "Answers") {
+                var name = "Answers";
+                topTen =
+                {{ top_10_databases_answers | safe }}
+            } else if (select === "Comments") {
+                var name = "Comments";
+                topTen =
+                {{ top_10_databases_comments | safe }}
+            } else if (select === "Views") {
+                var name = "Views";
+                topTen =
+                {{ top_10_databases_views | safe }}
+            } else if (select === "Minimum Response Time") {
+                var name = "Minimum Response Time";
+                topTen =
+                {{ top_10_databases_response_time | safe }}
+            }else {
+                var name = "Maximum Response Time";
+                topTen =
+                {{ top_10_databases_response_time_reverse | safe }}
+            }
+        } else if (selectClass === "Platforms") {
+            if (select === "Votes") {
+                var name = "Votes";
+                topTen =
+                {{ top_10_platforms_votes | safe }}
+            } else if (select === "Answers") {
+                var name = "Answers";
+                topTen =
+                {{ top_10_platforms_answers | safe }}
+            } else if (select === "Comments") {
+                var name = "Comments";
+                topTen =
+                {{ top_10_platforms_comments | safe }}
+            } else if (select === "Views") {
+                var name = "Views";
+                topTen =
+                {{ top_10_platforms_views | safe }}
+            } else if (select === "Minimum Response Time") {
+                var name = "Minimum Response Time";
+                topTen =
+                {{ top_10_platforms_response_time | safe }}
+            }else {
+                var name = "Maximum Response Time";
+                topTen =
+                {{ top_10_platforms_response_time_reverse | safe }}
+            }
+        } else if (selectClass === "Collaboration Tools") {
+            if (select === "Votes") {
+                var name = "Votes";
+                topTen =
+                {{ top_10_collaboration_tools_votes | safe }}
+            } else if (select === "Answers") {
+                var name = "Answers";
+                topTen =
+                {{ top_10_collaboration_tools_answers | safe }}
+            } else if (select === "Comments") {
+                var name = "Comments";
+                topTen =
+                {{ top_10_collaboration_tools_comments | safe }}
+            } else if (select === "Views"){
+                var name = "Views";
+                topTen =
+                {{ top_10_collaboration_tools_views | safe }}
+            } else if (select === "Minimum Response Time"){
+                var name = "Minimum Response Time";
+                topTen =
+                {{ top_10_collaboration_tools_response_time | safe }}
+            }else {
+                var name = "Maximum Response Time";
+                topTen =
+                {{ top_10_collaboration_tools_response_time_reverse | safe }}
+            }
+        } else if (selectClass === "Developer Tools") {
+            if (select === "Votes") {
+                var name = "Votes";
+                topTen =
+                {{ top_10_dev_tools_votes | safe }}
+            } else if (select === "Answers") {
+                var name = "Answers";
+                topTen =
+                {{ top_10_dev_tools_answers | safe }}
+            } else if (select === "Comments") {
+                var name = "Comments";
+                topTen =
+                {{ top_10_dev_tools_comments | safe }}
+            } else if (select === "Views"){
+                var name = "Views";
+                topTen =
+                {{ top_10_dev_tools_views | safe }}
+            } else if (select === "Minimum Response Time") {
+                var name = "Minimum Response Time";
+                topTen =
+                {{ top_10_dev_tools_response_time | safe }}
+            }else {
+                var name = "Maximum Response Time";
+                topTen =
+                {{ top_10_dev_tools_response_time_reverse | safe }}
+            }
+        } else if (selectClass === "All") {
+            if (select === "Votes") {
+                var name = "Votes";
+                topTen =
+                {{ top_10_sorted_ids_and_votes | safe }}
+            } else if (select === "Answers") {
+                var name = "Answers";
+                topTen =
+                {{ top_10_sorted_ids_and_answers | safe }}
+            } else if (select === "Comments") {
+                var name = "Comments";
+                topTen =
+                {{ top_10_sorted_ids_and_comments | safe }}
+            }else if (select === "Views"){
+                var name = "Views";
+                topTen =
+                {{ top_10_sorted_ids_and_views | safe }}
+            } else if (select === "Minimum Response Time"){
+                var name = "Minimum Response Time";
+                topTen =
+                {{ top_10_sorted_ids_and_response_time | safe }}
+            }else {
+                var name = "Maximum Response Time";
+                topTen =
+                {{ top_10_sorted_ids_and_response_time_reverse | safe }}
+            }
+        }
+        var tbl = document.getElementById('topTenTable');
+
+        var tblHead = document.createElement("thead");
+
+        var hrow = document.createElement("tr");
+
+        var hcell1 = document.createElement("th");
+        var hcellText1 = document.createTextNode("#");
+        hcell1.appendChild(hcellText1);
+        hrow.appendChild(hcell1);
+
+        var hcell2 = document.createElement("th");
+        var hcellText2 = document.createTextNode("Title");
+        hcell2.appendChild(hcellText2);
+        hrow.appendChild(hcell2);
+
+        var hcell3 = document.createElement("th");
+        var hcellText3 = document.createTextNode(name);
+        hcell3.appendChild(hcellText3);
+        hrow.appendChild(hcell3);
+
+        tblHead.appendChild(hrow);
+        tbl.appendChild(tblHead);
+
+
+        var tblBody = document.createElement("tbody");
+
+
+        var count = 1;
+        console.log(topTen)
+        for (const [key, value] of Object.entries(topTen)) {
+            var row = document.createElement("tr");
+            var cell1 = document.createElement("th");
+            var cellText1 = document.createTextNode(count);
+            cell1.appendChild(cellText1);
+            row.appendChild(cell1);
+
+            var link = document.createElement("a");
+            link.setAttribute("href", key)
+            link.setAttribute("target", "blank_")
+            if (selectClass === "All") {
+                var linkText = document.createTextNode(value[1]);
+            } else {
+                var linkText = document.createTextNode(value[5]);
+            }
+            link.appendChild(linkText)
+
+            var cell2 = document.createElement("td");
+            cell2.appendChild(link);
+            row.appendChild(cell2);
+
+            var cell3 = document.createElement("td");
+            if (selectClass === "All") {
+                var cellText3 = ((select === "Minimum Response Time") || (select === "Maximum Response Time")  ? document.createTextNode(value [0] + ' min') : document.createTextNode(value [0]));
+            } else {
+                if (select === "Votes") {
+                    var cellText3 = document.createTextNode(value [0]);
+                } else if (select === "Answers") {
+                    var cellText3 = document.createTextNode(value [1]);
+                } else if (select === "Comments") {
+                    var cellText3 = document.createTextNode(value [2]);
+                } else if (select === "Views") {
+                    var cellText3 = document.createTextNode(value [3]);
+                } else {
+                    var cellText3 = document.createTextNode(value [4] + ' min');
+                }
+            }
+            cell3.appendChild(cellText3);
+            row.appendChild(cell3);
+
+            tblBody.appendChild(row);
+            tbl.appendChild(tblBody);
+
+            count++;
+        }
+    }
+
+</script>
+
+<!-- Chart.js-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+
+<!-- D3.js Word Cloud -->
+<script src="https://d3js.org/d3.v4.js"></script>
+<!-- <script src="{{ url_for('static',filename='js/d3.layout.cloud.js') }}"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+
+<!-- Leaflet.js -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+<!-- Leaflet-Heat.js -->
+<script src="{{ url_for('static',filename='js/leaflet-heat.js') }}"></script>
+
+<!-- Bootstrap core JavaScript-->
+<script src="{{ url_for('static',filename='vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ url_for('static',filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="{{ url_for('static',filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="{{ url_for('static',filename='js/sb-admin-2.min.js') }}"></script>
+
+<!-- Page level plugins -->
+<script scr="{{ url_for('static',filename='vendor/chart.js/Chart.min.js') }}"></script>
+
+<!-- Page level custom scripts -->
+<script scr="{{ url_for('static',filename='js/demo/chart-area-demo.js') }}"></script>
+<script scr="{{ url_for('static',filename='js/demo/chart-pie-demo.js') }}"></script>
+
+<!-- date script -->
+<script>
+
+    var today = new Date();
+
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+
+    document.getElementById("date").innerHTML = date;
+
+</script>
+
+<!-- linechart script -->
+<script>
+
+    $(document).ready(function () {
+
+        var lineChart;
+
+        var ctx = document.getElementById("lineChart").getContext("2d");
+
+        lineChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: {{ labels |safe }},
+                datasets: [
+                    {
+                        label: "Number of Questions",
+                        data: {{ values |safe }},
+                        fill: true,
+                        backgroundColor: "rgb(75,192,192,0.61)",
+                        lineTension: 1,
+                        order: 2
+                    },
+                    {
+                        data: {{ halfMonthValues |safe }},
+                        fill: true,
+                        type: "line",
+                        borderColor: "rgb(220,20,60)",
+                        lineTension: 0,
+                        order: 1
+                    }
+                ]
+            },
+            options: {
+                elements: {
+                    point: {
+                        radius: 0
+                    }
+                },
+                legend: {
+                    labels: {
+                        filter: function (legendItem, chartData) {
+                            return legendItem.datasetIndex !== 1;
+
+                        }
+                    }
+                }
+            }
+        });
+
+        $('input[name = lineRadioOptions]').change(function () {
+
+            lineChart.destroy()
+
+            var radio = $(this).val();
+
+            if (radio === 'daily') {
+
+
+                lineChart = new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: {{ labels |safe }},
+                        datasets: [
+                            {
+                                label: "Number of Questions",
+                                data: {{ values |safe }},
+                                fill: true,
+                                backgroundColor: "rgba(75,192,192,0.61)",
+                                lineTension: 1,
+                                order: 2
+                            },
+                            {
+                                data: {{ halfMonthValues |safe }},
+                                fill: true,
+                                type: "line",
+                                borderColor: "rgb(220,20,60)",
+                                lineTension: 1,
+                                order: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        elements: {
+                            point: {
+                                radius: 0
+                            }
+                        },
+                        legend: {
+                            labels: {
+                                filter: function (legendItem, chartData) {
+                                    return legendItem.datasetIndex !== 1;
+
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+
+
+                lineChart = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: {{ labels |safe }},
+                        datasets: [
+                            {
+                                label: "Increasing Number of Questions",
+                                data: {{ added_values |safe }},
+                                fill: true,
+                                borderColor: "rgb(246,99,112)",
+                                lineTension: 0.1
+                            }
+                        ]
+                    }
+                });
+            }
+        })
+
+
+    })
+
+
+</script>
+
+<!-- wordcloud script -->
+<script>
+    $(window).resize(function () {
+
+        'use strict';
+        d3.select("svg").remove();
+
+        var dataScale = d3.scaleLinear().range([20, 80]);
+
+
+        const data = {{ list_of_tags_and_values | safe }};
+
+        var width = document.getElementById('wordCloud').offsetWidth, height = 500;
+
+        if (document.getElementById('wordCloud').offsetWidth < 400) {
+            dataScale = d3.scaleLinear().range([10, 40]);
+            height = 300;
+        }
+
+        var fill = d3.scaleOrdinal(d3.schemeCategory20);
+
+        dataScale.domain([
+            d3.min(data, function (d) {
+                return d.size;
+            }),
+            d3.max(data, function (d) {
+                return d.size;
+            })
+        ]);
+
+        d3.layout.cloud().size([width, height])
+            .words(data)
+            .padding(0)
+            {#.rotate(function() { return ~~(Math.random() * 2) * 90; })#}
+            .font("Impact")
+            .fontSize(function (d) {
+                return dataScale(d.size);
+            })
+            .on("end", draw)
+            .start();
+
+        function draw(words) {
+            d3.select("#wordCloud").append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")")
+                .selectAll("text")
+                .data(words)
+                .enter().append("text")
+                .style("font-size", function (d) {
+                    return d.size + "px";
+                })
+                .style("font-family", "Impact")
+                .style("fill", function (d, i) {
+                    return fill(i);
+                })
+                .attr("text-anchor", "middle")
+                .attr("transform", function (d) {
+                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .text(function (d) {
+                    return d.text;
+                });
+        }
+    });
+
+    'use strict';
+
+    var dataScale = d3.scaleLinear().range([20, 80]);
+    const data = {{ list_of_tags_and_values | safe }};
+    var width = document.getElementById('wordCloud').offsetWidth, height = 500;
+    var fill = d3.scaleOrdinal(d3.schemeCategory20);
+    dataScale.domain([
+        d3.min(data, function (d) {
+            return d.size;
+        }),
+        d3.max(data, function (d) {
+            return d.size;
+        })
+    ]);
+    d3.layout.cloud().size([width, height])
+        .words(data)
+        .padding(0)
+        .font("Impact")
+        .fontSize(function (d) {
+            return dataScale(d.size);
+        })
+        .on("end", draw)
+        .start();
+
+    function draw(words) {
+        d3.select("#wordCloud").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function (d) {
+                return d.size + "px";
+            })
+            .style("font-family", "Impact")
+            .style("fill", function (d, i) {
+                return fill(i);
+            })
+            .attr("text-anchor", "middle")
+            .attr("transform", function (d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .text(function (d) {
+                return d.text;
+            });
+    }
+
+</script>
+
+<!-- barchart script -->
+<script>
+
+    var ctx = document.getElementById("barChart").getContext("2d");
+
+    Chart.defaults.scale.ticks.beginAtZero = true;
+
+    var barChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: {{ barChartLabels |safe }},
+            datasets: [
+                {
+                    label: "Top 10 Technologies",
+                    data: {{ barChartValues |safe }},
+                    backgroundColor: [
+                        'rgba(51, 28, 71, 0.5)',
+                        'rgba(51, 99, 71, 0.5)',
+                        'rgb(255,99,71)',
+                        'rgba(0, 152, 77, 0.7)',
+                        'rgba(0, 39, 77, 0.7)',
+                        'rgba(242, 39, 77, 0.7)',
+                        'rgba(242, 39, 77, 0.8)',
+                        'rgba(0, 183, 140, 0.8)',
+                        'rgba(0, 107, 140, 1)',
+                        'rgba(255, 107, 59, 0.7)'
+                    ]
+                }
+            ],
+            options: {
+                responsive: false
+            }
+        }
+    });
+
+</script>
+
+
+<!-- map script -->
+
+<script>
+
+    $(document).ready(function () {
+
+        document.getElementById('map').innerHTML = "<div id='mapid' style='height: 800px; background: rgb(38,38,38);'></div>"
+
+        const mymap = L.map('mapid', {
+            scrollWheelZoom: false
+        }).setView([0, 0], 1.5);
+
+        const attribution =
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+        const tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
+
+        const tiles = L.tileLayer(tileUrl, {attribution, noWrap: true});
+
+        tiles.addTo(mymap);
+
+        const latitude = {{ latitudes | safe }};
+
+        const longitude = {{ longitudes | safe }};
+
+        const locations = {{ locations | safe }};
+
+        const location_name = {{ location_name | safe }};
+
+        const location_question = {{ location_question | safe }};
+
+        var i;
+
+
+        for (i = 0; i < latitude.length; i++) {
+            var j;
+
+            const circle = L.circle([latitude[i], longitude[i]], {
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0.5,
+                radius: 1500
+            }).addTo(mymap);
+            for (j = 0; j < location_name.length; j++) {
+                if (locations[i] === location_name[j]) {
+                    circle.bindPopup("Location: " + location_name[j] + "<br> Questions: " + location_question[j]);
+
+                    circle.on('mouseover', function (e) {
+                        this.openPopup();
+                    });
+                    circle.on('mouseout', function (e) {
+                        this.closePopup();
+                    });
+                }
+
+            }
+        }
+
+
+        var corner1 = L.latLng(90.17871349622823, 289.49218750000006),
+            corner2 = L.latLng(-90.17871349622823, -289.14062500000006),
+            bounds = L.latLngBounds(corner1, corner2);
+
+        mymap.setMaxBounds(bounds);
+
+        $('input[name=inlineRadioOptions]').change(function () {
+            var radio = $(this).val();
+
+
+            if (radio === "heatMap") {
+
+                document.getElementById('map').innerHTML = "<div id='mapid' style='height: 800px; background: rgb(38,38,38);'>"
+
+                const mymap = L.map('mapid').setView([0, 0], 1.5);
+
+                const attribution =
+                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+                const tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
+
+                const tiles = L.tileLayer(tileUrl, {attribution, noWrap: true});
+
+                tiles.addTo(mymap);
+
+                var latLngInt = {{ latLngInt |safe}};
+
+
+                var heat = L.heatLayer(
+                    latLngInt,
+                    {
+                        radius: 25,
+                        minOpacity: 0.2,
+                        gradient: {0.025: 'blue', 0.2: 'lime', 0.7: 'red'}
+                    }).addTo(mymap);
+
+
+                var corner1 = L.latLng(90.17871349622823, 289.49218750000006),
+                    corner2 = L.latLng(-90.17871349622823, -289.14062500000006),
+                    bounds = L.latLngBounds(corner1, corner2);
+
+                mymap.setMaxBounds(bounds);
+            } else {
+
+                document.getElementById('map').innerHTML = "<div id='mapid' style='height: 800px; background: rgb(38,38,38);'></div>"
+
+                const mymap = L.map('mapid', {
+                    scrollWheelZoom: false
+                }).setView([0, 0], 1.5);
+
+                const attribution =
+                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+                const tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
+
+                const tiles = L.tileLayer(tileUrl, {attribution, noWrap: true});
+
+                tiles.addTo(mymap);
+
+                const latitude = {{ latitudes | safe }};
+
+                const longitude = {{ longitudes | safe }};
+
+                const locations = {{ locations | safe }};
+
+                const location_name = {{ location_name | safe }};
+
+                const location_question = {{ location_question | safe }};
+
+
+                var i;
+
+                for (i = 0; i < latitude.length; i++) {
+                    var j;
+
+                    const circle = L.circle([latitude[i], longitude[i]], {
+                        color: 'red',
+                        fillColor: '#f03',
+                        fillOpacity: 0.5,
+                        radius: 1500
+                    }).addTo(mymap);
+                    for (j = 0; j < location_name.length; j++) {
+                        if (locations[i] === location_name[j]) {
+                            circle.bindPopup("Location: " + location_name[j] + "<br> Questions: " + location_question[j]);
+
+                            circle.on('mouseover', function (e) {
+                                this.openPopup();
+                            });
+                            circle.on('mouseout', function (e) {
+                                this.closePopup();
+                            });
+                        }
+
+                    }
+                }
+
+                var corner1 = L.latLng(90.17871349622823, 289.49218750000006),
+                    corner2 = L.latLng(-90.17871349622823, -289.14062500000006),
+                    bounds = L.latLngBounds(corner1, corner2);
+
+                mymap.setMaxBounds(bounds);
+            }
+
+        });
+    });
+</script>
+
+<!-- Radar Chart script -->
+<script>
+
+    var ctx = document.getElementById("radarChart").getContext("2d");
+
+    Chart.defaults.scale.ticks.beginAtZero = true;
+    Chart.defaults.global.defaultFontSize = 14;
+
+
+    var radarChart = new Chart(ctx, {
+        type: "radar",
+        data: {
+            labels: ['Languages', 'Web Frameworks', 'Big Data - ML', 'Databases', 'Platforms', 'Collaboration Tools',
+                'Developer Tools'],
+            datasets: [
+                {
+                    label: "Technology Percentage",
+                    data: {{ radar_values |safe }},
+                    fill: true,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    pointBackgroundColor: 'rgb(255, 99, 132)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(255, 99, 132)'
+                }
+            ]
+        }
+    });
+
+</script>
+
+
+<!-- Doughnut Chart Code Snippets script -->
+<script>
+
+    var ctx = document.getElementById("doughnutChartCodeSnippets").getContext("2d");
+
+    Chart.defaults.scale.ticks.beginAtZero = true;
+    Chart.defaults.global.defaultFontSize = 14;
+
+
+    var radarChart = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: ['Yes', 'No'],
+            datasets: [
+                {
+                    label: "Technology Percentage",
+                    data: {{ snippetData |safe }},
+                    fill: true,
+                    backgroundColor: [
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 99, 132)'
+
+                    ]
+                }
+            ]
+        }
+    });
+
+</script>
+
+<!-- Doughnut Chart Answered Questions script -->
+<script>
+
+    var ctx = document.getElementById("doughnutChartAnswered").getContext("2d");
+
+    Chart.defaults.scale.ticks.beginAtZero = true;
+    Chart.defaults.global.defaultFontSize = 14;
+
+
+    var radarChart = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: ['Yes', 'No'],
+            datasets: [
+                {
+                    label: "Technology Percentage",
+                    data: {{ answeredData |safe }},
+                    fill: true,
+                    backgroundColor: [
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 99, 132)'
+
+                    ]
+                }
+            ]
+        }
+    });
+
+</script>
+
+<!-- Polar Chart script -->
+<script>
+
+    var ctx = document.getElementById("polarChart").getContext("2d");
+
+    Chart.defaults.scale.ticks.beginAtZero = true;
+    Chart.defaults.global.defaultFontSize = 14;
+
+    var configAllGroups = {
+        type: "polarArea",
+        data: {
+            labels: ['Open', 'Deleted', 'Closed'],
+            datasets: [
+                {
+                    label: "Technology Percentage",
+                    data: {{ all_groups_question_types |safe }},
+                    fill: true,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 205, 86)'
+                    ]
+                }
+            ]
+        }
+    };
+
+    var configLanguages = {
+        type: "polarArea",
+        data: {
+            labels: ['Open', 'Deleted', 'Closed'],
+            datasets: [
+                {
+                    label: "Technology Percentage",
+                    data: {{ languges_question_types |safe }},
+                    fill: true,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 205, 86)'
+                    ]
+                }
+            ]
+        }
+    };
+
+    var configWebFrameworks = {
+        type: "polarArea",
+        data: {
+            labels: ['Open', 'Deleted', 'Closed'],
+            datasets: [
+                {
+                    label: "Technology Percentage",
+                    data: {{ web_frameworks_question_types |safe }},
+                    fill: true,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 205, 86)'
+                    ]
+                }
+            ]
+        }
+    };
+
+    var configBigDataML = {
+        type: "polarArea",
+        data: {
+            labels: ['Open', 'Deleted', 'Closed'],
+            datasets: [
+                {
+                    label: "Technology Percentage",
+                    data: {{ big_data_ml_question_types |safe }},
+                    fill: true,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 205, 86)'
+                    ]
+                }
+            ]
+        }
+    };
+
+    var configDatabases = {
+        type: "polarArea",
+        data: {
+            labels: ['Open', 'Deleted', 'Closed'],
+            datasets: [
+                {
+                    label: "Technology Percentage",
+                    data: {{ databases_question_types |safe }},
+                    fill: true,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 205, 86)'
+                    ]
+                }
+            ]
+        }
+    };
+
+    var configPlatforms = {
+        type: "polarArea",
+        data: {
+            labels: ['Open', 'Deleted', 'Closed'],
+            datasets: [
+                {
+                    label: "Technology Percentage",
+                    data: {{ platforms_question_types |safe }},
+                    fill: true,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 205, 86)'
+                    ]
+                }
+            ]
+        }
+    };
+
+    var configCollaborationTools = {
+        type: "polarArea",
+        data: {
+            labels: ['Open', 'Deleted', 'Closed'],
+            datasets: [
+                {
+                    label: "Technology Percentage",
+                    data: {{ collaboration_tools_question_types |safe }},
+                    fill: true,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 205, 86)'
+                    ]
+                }
+            ]
+        }
+    };
+
+    var configDevTools = {
+        type: "polarArea",
+        data: {
+            labels: ['Open', 'Deleted', 'Closed'],
+            datasets: [
+                {
+                    label: "Technology Percentage",
+                    data: {{ dev_tools_question_types |safe }},
+                    fill: true,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 205, 86)'
+                    ]
+                }
+            ]
+        }
+    };
+
+
+
+    var polarChart = new Chart(ctx, configAllGroups);
+
+    function changeGroup() {
+        var collaborationGroup = document.getElementById('groupSelect').value;
+        polarChart.destroy();
+        if (collaborationGroup === "Languages") {
+            polarChart = new Chart(ctx, configLanguages);
+        }else if (collaborationGroup === "Web Frameworks") {
+            polarChart = new Chart(ctx, configWebFrameworks);
+        }else if (collaborationGroup === "Big Data - ML") {
+            polarChart = new Chart(ctx, configBigDataML);
+        }else if (collaborationGroup === "Databases") {
+            polarChart = new Chart(ctx, configDatabases);
+        }else if (collaborationGroup === "Platforms") {
+            polarChart = new Chart(ctx, configPlatforms);
+        }else if (collaborationGroup === "Collaboration Tools") {
+            polarChart = new Chart(ctx, configCollaborationTools);
+        }else if (collaborationGroup === "Developer Tools") {
+            polarChart = new Chart(ctx, configDevTools);
+        }else if (collaborationGroup === "All") {
+            polarChart = new Chart(ctx, configAllGroups);
+        }
+    }
+
+</script>
+
+
+
+<!-- Chord Diagram -->
+<script>
+    ////////////////////////////////////////////////////////////
+    //////////////////////// Set-Up ////////////////////////////
+    ////////////////////////////////////////////////////////////
+    var margin = {top: 50, right: 50, bottom: 50, left: 50},
+        width = parseInt(d3.select("#my_dataviz").style("width")) - margin.left - margin.right ,
+        height = parseInt(d3.select("#my_dataviz").style("height")) - margin.top - margin.bottom,
+        innerRadius = Math.min(width, height) * 0.41,
+        outerRadius = innerRadius * 1.1;
+    var names = {{top_twenty_tags | safe}},
+        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080',
+            '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'],
+    opacityDefault = 0.8;
+
+    var matrix = {{list_tag_link_matrix | safe }};
+
+////////////////////////////////////////////////////////////
+/////////// Create scale and layout functions //////////////
+////////////////////////////////////////////////////////////
+
+var colors = d3.scaleOrdinal()
+    .domain(d3.range(names.length))
+  .range(colors);
+
+var chord = d3.chord()
+  .padAngle(.01)
+  .sortChords(d3.descending)
+
+  var arc = d3.arc()
+  .innerRadius(innerRadius*1.01)
+  .outerRadius(outerRadius);
+
+var path = d3.ribbon()
+.radius(innerRadius);
+
+////////////////////////////////////////////////////////////
+////////////////////// Create SVG //////////////////////////
+////////////////////////////////////////////////////////////
+var svg = d3.select("#my_dataviz")
+.append("svg")
+.attr("viewBox", "0 0 " + (width + margin.left + margin.right) + " " + (height + margin.top + margin.bottom))
+.attr("preserveAspectRatio", "xMinYMin meet")
+.append("g")
+.attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")")
+.datum(chord(matrix));
+
+////////////////////////////////////////////////////////////
+////////////////// Draw outer Arcs /////////////////////////
+////////////////////////////////////////////////////////////
+
+var outerArcs = svg.selectAll("g.group")
+.data(function(chords) { return chords.groups; })
+.enter().append("g")
+.attr("class", "group")
+.on("mouseover", fade(.1))
+.on("mouseout", fade(opacityDefault));
+
+////////////////////////////////////////////////////////////
+////////////////////// Append names ////////////////////////
+////////////////////////////////////////////////////////////
+
+//Append the label names INSIDE outside
+outerArcs.append("path")
+.style("fill", function(d) { return colors(d.index); })
+.attr("id", function(d, i) { return "group" + d.index; })
+.attr("d", arc);
+
+outerArcs.append("text")
+    .each(function(d) { d.angle = (d.startAngle + d.endAngle) / 2; })
+    .attr("dy", ".35em")
+    .attr("class", "titles")
+    .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+    .attr("transform", function(d) {
+    if (outerArcs = 0) {
+      width = 5.0;
+    }
+    return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+    + "translate(" + (outerRadius + 10) + ")"
+    + (d.angle > Math.PI ? "rotate(180)" : "");
+    })
+    .text(function(chords, i) { return names[i]; });
+
+////////////////////////////////////////////////////////////
+////////////////// Draw inner chords ///////////////////////
+////////////////////////////////////////////////////////////
+
+svg.selectAll("path.chord")
+.data(function(chords) { return chords; })
+.enter().append("path")
+.attr("class", "chord")
+.style("fill", function(d) { return colors(d.source.index); })
+.style("opacity", opacityDefault)
+.attr("d", path)
+.on("mouseover", mouseoverChord)
+.on("mouseout", mouseoutChord);
+
+
+////////////////////////////////////////////////////////////
+////////////////// Extra Functions /////////////////////////
+////////////////////////////////////////////////////////////
+
+function mouseoverChord(d,i) {
+    var me = this;  
+    svg.selectAll("path.chord")
+    .filter(function(d) {
+        return this != me;
+    })
+    .transition()
+    .style("opacity", .1);
+    $(this).popover({
+        //placement: 'auto top',
+        placement: 'auto',
+        container: 'body',
+        animation: false,
+        offset: "20px -100px",
+        followMouse: true,
+        html : true,
+        content: function() {
+        return "Both " +"'"+ names[d.source.index] +"'"+ " and " +"'"+ names[d.target.index] +"'"+ " where used " + d.source.value + " times together as tags in a question"; }
+    });
+    $(this).popover('show');
+}
+
+function mouseoutChord(d) {
+    //Hide the tooltip
+    $('.popover').each(function() {
+    $(this).remove();
+    })
+    //Set opacity back to default for all
+    var me = this;  
+        svg.selectAll("path.chord")
+        .filter(function(d) {
+            return this != me;
+        })
+    .transition()
+        .style("opacity", opacityDefault);
+}      //function mouseoutChord
+
+//Returns an event handler for fading a given chord group.
+function fade(opacity) {
+    return function(d,i) {
+    svg.selectAll("path.chord")
+        .filter(function(d) { return d.source.index != i && d.target.index != i; })
+    .transition()
+        .style("opacity", opacity);
+    };
+}//fade
+
+
+d3.select("#classSelectChord").on("change", function() {
+    'use strict';
+    d3.select('#my_dataviz').selectAll('svg').remove();
+    var collaborationGroup = document.getElementById('classSelectChord').value;
+    var colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe'];
+    var opacityDefault = 0.8;
+    if (collaborationGroup === "Languages") {
+        var names = {{names_top_10_sorted_languages_tags | safe}};
+        var matrix = {{list_languages_tag_link_matrix | safe}};
+    }else if (collaborationGroup === "Web Frameworks") {
+        var names = {{names_top_10_sorted_frameworks_tags | safe}};
+        var matrix = {{list_frameworks_tag_link_matrix | safe}};
+    }else if (collaborationGroup === "Big Data - ML") {
+        var names = {{names_top_10_sorted_big_data_ml_tags | safe}};
+        var matrix = {{list_big_data_ml_tag_link_matrix | safe}};
+    }else if (collaborationGroup === "Databases") {
+        var names = {{names_top_10_sorted_databases_tags | safe}};
+        var matrix = {{list_databases_tag_link_matrix | safe}};
+    }else if (collaborationGroup === "Platforms") {
+        var names = {{names_top_10_sorted_platforms_tags | safe}};
+        var matrix = {{list_platforms_tag_link_matrix |safe}};
+    }else if (collaborationGroup === "Collaboration Tools") {
+        var names = {{names_top_10_sorted_collaboration_tools_tags | safe}};
+        var matrix = {{list_collaboration_tools_tag_link_matrix | safe}};
+    }else if (collaborationGroup === "Developer Tools") {
+        var names = {{names_top_10_sorted_developer_tools_tags | safe}};
+        var matrix = {{list_developer_tools_tag_link_matrix | safe}};
+    }else if (collaborationGroup === "All") {
+        var names = {{top_twenty_tags | safe}};
+        var matrix = {{list_tag_link_matrix |safe}};
+        var colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080',
+            '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'];
+    }
+    ////////////////////////////////////////////////////////////
+    //////////////////////// Set-Up ////////////////////////////
+    ////////////////////////////////////////////////////////////
+    var margin = {top: 50, right: 50, bottom: 50, left: 50},
+        width = parseInt(d3.select("#my_dataviz").style("width")) - margin.left - margin.right ,
+        height = parseInt(d3.select("#my_dataviz").style("height")) - margin.top - margin.bottom,
+        innerRadius = Math.min(width, height) * 0.41,
+        outerRadius = innerRadius * 1.1;
+
+////////////////////////////////////////////////////////////
+/////////// Create scale and layout functions //////////////
+////////////////////////////////////////////////////////////
+
+var colors = d3.scaleOrdinal()
+    .domain(d3.range(names.length))
+  .range(colors);
+
+var chord = d3.chord()
+  .padAngle(.01)
+  .sortChords(d3.descending)
+
+  var arc = d3.arc()
+  .innerRadius(innerRadius*1.01)
+  .outerRadius(outerRadius);
+
+var path = d3.ribbon()
+.radius(innerRadius);
+
+////////////////////////////////////////////////////////////
+////////////////////// Create SVG //////////////////////////
+////////////////////////////////////////////////////////////
+var svg = d3.select("#my_dataviz")
+.append("svg")
+.attr("viewBox", "0 0 " + (width + margin.left + margin.right) + " " + (height + margin.top + margin.bottom))
+.attr("preserveAspectRatio", "xMinYMin meet")
+.append("g")
+.attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")")
+.datum(chord(matrix));
+
+////////////////////////////////////////////////////////////
+////////////////// Draw outer Arcs /////////////////////////
+////////////////////////////////////////////////////////////
+
+var outerArcs = svg.selectAll("g.group")
+.data(function(chords) { return chords.groups; })
+.enter().append("g")
+.attr("class", "group")
+.on("mouseover", fade(.1))
+.on("mouseout", fade(opacityDefault));
+
+////////////////////////////////////////////////////////////
+////////////////////// Append names ////////////////////////
+////////////////////////////////////////////////////////////
+
+//Append the label names INSIDE outside
+outerArcs.append("path")
+.style("fill", function(d) { return colors(d.index); })
+.attr("id", function(d, i) { return "group" + d.index; })
+.attr("d", arc);
+
+outerArcs.append("text")
+    .each(function(d) { d.angle = (d.startAngle + d.endAngle) / 2; })
+    .attr("dy", ".35em")
+    .attr("class", "titles")
+    .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+    .attr("transform", function(d) {
+    if (outerArcs = 0) {
+      width = 5.0;
+    }
+    return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+    + "translate(" + (outerRadius + 10) + ")"
+    + (d.angle > Math.PI ? "rotate(180)" : "");
+    })
+    .text(function(chords, i) {if(chords.value!==0) return names[i]; });
+
+////////////////////////////////////////////////////////////
+////////////////// Draw inner chords ///////////////////////
+////////////////////////////////////////////////////////////
+
+svg.selectAll("path.chord")
+.data(function(chords) { return chords; })
+.enter().append("path")
+.attr("class", "chord")
+.style("fill", function(d) { return colors(d.source.index); })
+.style("opacity", opacityDefault)
+.attr("d", path)
+.on("mouseover", mouseoverChord)
+.on("mouseout", mouseoutChord);
+
+
+////////////////////////////////////////////////////////////
+////////////////// Extra Functions /////////////////////////
+////////////////////////////////////////////////////////////
+
+function mouseoverChord(d,i) {
+    var me = this;  
+    svg.selectAll("path.chord")
+    .filter(function(d) {
+        return this != me;
+    })
+    .transition()
+    .style("opacity", .1);
+    $(this).popover({
+        //placement: 'auto top',
+        placement: 'auto',
+        container: 'body',
+        animation: false,
+        offset: "20px -100px",
+        followMouse: true,
+        html : true,
+        content: function() {
+        return "Both " +"'"+ names[d.source.index] +"'"+ " and " +"'"+ names[d.target.index] +"'"+ " where used " + d.source.value + " times together as tags in a question"; }
+    });
+    $(this).popover('show');
+}
+
+function mouseoutChord(d) {
+    //Hide the tooltip
+    $('.popover').each(function() {
+    $(this).remove();
+    })
+    //Set opacity back to default for all
+    var me = this;  
+        svg.selectAll("path.chord")
+        .filter(function(d) {
+            return this != me;
+        })
+    .transition()
+        .style("opacity", opacityDefault);
+}      //function mouseoutChord
+
+//Returns an event handler for fading a given chord group.
+function fade(opacity) {
+    return function(d,i) {
+    svg.selectAll("path.chord")
+        .filter(function(d) { return d.source.index != i && d.target.index != i; })
+    .transition()
+        .style("opacity", opacity);
+    };
+}//fade
+});
+
+</script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    var allGroups = {
+        x: {{times_data_list | safe}},
+        y: {{survival_time_curve_values | safe}},
+        type: 'scatter',
+        mode: 'lines',
+        name: 'All Competence Groups'
+    };
+
+    var languages = {
+        x: {{languages_times_data_list | safe}},
+        y: {{languages_survival_time_curve_values | safe}},
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Languages'
+    };
+
+    var webFrameworks = {
+        x: {{web_frameworks_times_data_list | safe}},
+        y: {{web_frameworks_survival_time_curve_values | safe}},
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Web Frameworks'
+    };
+
+    var bigDataML = {
+        x: {{big_data_ml_times_data_list | safe}},
+        y: {{big_data_ml_survival_time_curve_values | safe}},
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Big Data - ML'
+    };
+
+    var databases = {
+        x: {{databases_times_data_list | safe}},
+        y: {{databases_survival_time_curve_values | safe}},
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Databases'
+    };
+
+    var platforms = {
+        x: {{platforms_times_data_list | safe}},
+        y: {{platforms_survival_time_curve_values | safe}},
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Platforms'
+    };
+
+    var collaborationTools = {
+        x: {{collaboration_tools_times_data_list | safe}},
+        y: {{collaboration_tools_survival_time_curve_values | safe}},
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Collaboration Tools'
+    };
+
+    var developerTools = {
+        x: {{dev_tools_times_data_list | safe}},
+        y: {{dev_tools_survival_time_curve_values | safe}},
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Developer Tools'
+    };
+    
+    var survivalData = [allGroups, languages, webFrameworks, bigDataML, databases, platforms, collaborationTools, developerTools];
+    
+    var layout = {
+        title: 'Kaplan-Meier Curve',
+        xaxis: {title: 'Time in minutes'},
+        yaxis: {title: 'Survival Probability'},
+        width: "100%"
+    };
+    
+    var config = {
+        responsive: true
+    };
+
+    Plotly.newPlot('survivalCurve', survivalData, layout, config); 
+</script>
+
+<script>
+    document.getElementById('datepicker').onclick = function() {
+        var dateFrom = document.getElementById('dateFrom').value;
+        var dateTo = document.getElementById('dateTo').value;
+        var closed = document.getElementById('includeClosedQuestionsCheckbox').checked ? 1 : 0;
+        var server_data = [
+            {"dateFrom" : dateFrom},
+            {"dateTo"   : dateTo  }
+        ];
+        window.location.href = './get_dates?dateFrom=' + dateFrom + '&dateTo=' + dateTo + '&inclClosed=' + closed;
+    };
+</script>
+
+<script>
+    window.onload = function () {
+
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var inclClosed = urlParams.get('inclClosed');
+        if (inclClosed && inclClosed === '1') {
+            document.getElementById('includeClosedQuestionsCheckbox').checked = true; 
+        }
+    }
+     //document.getElementById('includeClosedQuestionsCheckbox') 
+</script>
+
+<script>
+    var ctx1 = document.getElementById("commentsDistributionChart").getContext("2d");
+
+    Chart.defaults.scale.ticks.beginAtZero = true;
+    
+    var commentsLabels = {{ sorted_comments_distribution_labels |safe }};
+    var commentsBackgroundColors = [];
+    commentsLabels.forEach(function(label) {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        commentsBackgroundColors.push('rgba('+r+','+g+','+b+',0.7)');
+    });
+
+    var commentsBarChart = new Chart(ctx1, {
+        type: "bar",
+        data: {
+            labels: commentsLabels,
+            datasets: [
+                {
+                    label: "Comments Distribution",
+                    data: {{ sorted_comments_distribution_values |safe }},
+                    backgroundColor: commentsBackgroundColors
+                }
+            ],
+            options: {
+                responsive: false
+            }
+        }
+    });
+
+    var ctx2 = document.getElementById("answersDistributionChart").getContext("2d");
+
+    Chart.defaults.scale.ticks.beginAtZero = true;
+
+    var answersLabels = {{ sorted_answers_distribution_labels |safe }};
+    var answersBackgroundColors = [];
+    answersLabels.forEach(function(label) {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        answersBackgroundColors.push('rgba('+r+','+g+','+b+',0.7)');
+    });
+
+    var barChart = new Chart(ctx2, {
+        type: "bar",
+        data: {
+            labels: answersLabels,
+            datasets: [
+                {
+                    label: "Answers Distribution",
+                    data: {{ sorted_answers_distribution_values |safe }},
+                    backgroundColor: answersBackgroundColors
+                }
+            ],
+            options: {
+                responsive: false
+            }
+        }
+    });
+
+    var ctx3 = document.getElementById("votesDistributionChart").getContext("2d");
+
+    Chart.defaults.scale.ticks.beginAtZero = true;
+
+    var votesLabels = {{ sorted_votes_distribution_labels |safe }};
+    var votesBackgroundColors = [];
+    votesLabels.forEach(function(label) {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        votesBackgroundColors.push('rgba('+r+','+g+','+b+',0.7)');
+    });
+
+    var barChart = new Chart(ctx3, {
+        type: "bar",
+        data: {
+            labels: votesLabels,
+            datasets: [
+                {
+                    label: "Votes Distribution",
+                    data: {{ sorted_votes_distribution_values |safe }},
+                    backgroundColor: votesBackgroundColors
+                }
+            ],
+            options: {
+                responsive: false
+            }
+        }
+    });
+
+    var ctx4 = document.getElementById("viewsDistributionChart").getContext("2d");
+
+    Chart.defaults.scale.ticks.beginAtZero = true;
+
+    var viewsLabels = {{ sorted_views_distribution_labels |safe }};
+
+    var barChart = new Chart(ctx4, {
+        type: "line",
+        data: {
+            labels: viewsLabels,
+            datasets: [
+                {
+                    label: "Views Distribution",
+                    data: {{ sorted_views_distribution_values |safe }},
+                    backgroundColor: 'rgba(51, 28, 71, 0.5)',
+                    lineTension: 1,
+                    pointRadius: 0
+                }
+            ],
+            options: {
+                responsive: true
+                
+            }
+        }
+    });
+
+</script>
+
+<script>
+    $('#carouselDoughnut').on('slid.bs.carousel', function() {
+        if(document.getElementById('answered').classList.contains('active')){
+            document.getElementById('dougnutChartTitle').innerHTML = 'Doughnut Chart of Answered Questions'
+        }else {
+            document.getElementById('dougnutChartTitle').innerHTML = 'Doughnut Chart of Questions Containing Code Snippets'
+        }
+    });
+
+</script>
+
+
+</div>
+</body>
+
+</html>

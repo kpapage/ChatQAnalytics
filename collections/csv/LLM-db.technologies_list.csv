@@ -1,0 +1,193 @@
+_id,field,technology
+1,javascript,Languages
+2,html,Languages
+3,css,Languages
+4,python,Languages
+5,java ,Languages
+6,bash,Languages
+7,shell,Languages
+8,powershell,Languages
+9,c#,Languages
+10,php,Languages
+11,typescript,Languages
+12,c++,Languages
+13,c,Languages
+14,go,Languages
+15,kotlin,Languages
+16,ruby,Languages
+17,assembly,Languages
+18,vba,Languages
+19,swift,Languages
+20,r,Languages
+21,rust,Languages
+22,objective-c,Languages
+23,dart,Languages
+24,scala,Languages
+25,perl,Languages
+26,haskell,Languages
+27,julia,Languages
+28,elixir,Languages
+29,clojure,Languages
+30,webassembly,Languages
+31,f#,Languages
+32,erlang,Languages
+33,matlab,Languages
+34,groovy,Languages
+35,hack,Languages
+36,ocaml,Languages
+37,visual-basic-6,Languages
+38,cobol,Languages
+39,coffeescript,Languages
+40,vb.net,Languages
+41,lua,Languages
+42,object-pascal,Languages
+43,smalltalk,Languages
+44,common-lisp,Languages
+45,coldfusion,Languages
+46,abap,Languages
+47,c++11,Languages
+48,fortran,Languages
+49,graphql,Languages
+50,prolog,Languages
+51,sql,Languages
+52,jquery,Web Frameworks
+53,reactjs,Web Frameworks
+54,angular,Web Frameworks
+55,asp.net,Web Frameworks
+56,express,Web Frameworks
+57,asp.net-core,Web Frameworks
+58,vue.js,Web Frameworks
+59,vuejs,Web Frameworks
+60,spring,Web Frameworks
+61,angularjs,Web Frameworks
+62,django,Web Frameworks
+63,flask,Web Frameworks
+64,laravel,Web Frameworks
+65,ruby-on-rails,Web Frameworks
+66,symfony,Web Frameworks
+67,gatsby,Web Frameworks
+68,drupal,Web Frameworks
+69,xamarin,Web Frameworks
+70,node.js,Web Frameworks
+71,.net,Web Frameworks
+72,.net-core,Web Frameworks
+73,.net core,Web Frameworks
+74,net-core,Web Frameworks
+75,react-native,Web Frameworks
+76,nestjs,Web Frameworks
+77,rollupjs,Web Frameworks
+78,pandas,Big Data - ML
+79,tensorflow,Big Data - ML
+80,ansible,Big Data - ML
+81,keras,Big Data - ML
+82,apache-spark,Big Data - ML
+83,torch,Big Data - ML
+84,pytorch,Big Data - ML
+85,hadoop,Big Data - ML
+86,pyspark,Big Data - ML
+87,apache-kafka,Big Data - ML
+88,talend,Big Data - ML
+89,apache-flink,Big Data - ML
+90,flink,Big Data - ML
+91,powerbi,Big Data - ML
+92,hive,Big Data - ML
+93,hbase,Big Data - ML
+94,visual-studio-code,Developer Tools
+95,visual-studio,Developer Tools
+96,intellij,Developer Tools
+97,vim,Developer Tools
+98,android-studio,Developer Tools
+99,eclipse,Developer Tools
+100,pycharm,Developer Tools
+101,atom,Developer Tools
+102,ipython,Developer Tools
+103,jupyter,Developer Tools
+104,jupyter-notebook,Developer Tools
+105,xcode,Developer Tools
+106,netbeans,Developer Tools
+107,emacs,Developer Tools
+108,rstudio,Developer Tools
+109,coda,Developer Tools
+110,komodo,Developer Tools
+111,zend,Developer Tools
+112,delphi,Developer Tools
+113,ionic-framework,Developer Tools
+114,flutter,Developer Tools
+115,cordova,Developer Tools
+116,qt,Developer Tools
+117,maven,Developer Tools
+118,terraform,Developer Tools
+119,qtquick,Developer Tools
+120,google-developers-console,Developer Tools
+121,github,Collaboration Tools
+122,slack,Collaboration Tools
+123,jira,Collaboration Tools
+124,google-suite,Collaboration Tools
+125,gitlab,Collaboration Tools
+126,confluence,Collaboration Tools
+127,trello,Collaboration Tools
+128,microsoft-teams,Collaboration Tools
+129,azure,Collaboration Tools
+130,git,Collaboration Tools
+131,perforce,Collaboration Tools
+132,svn,Collaboration Tools
+133,mercurial,Collaboration Tools
+134,cvs,Collaboration Tools
+135,puppet,Collaboration Tools
+136,chef,Collaboration Tools
+137,k6,Collaboration Tools
+138,puppeteer,Collaboration Tools
+139,unity,Platforms
+140,unreal-engine,Platforms
+141,cryengine,Platforms
+142,linux,Platforms
+143,windows,Platforms
+144,docker,Platforms
+145,aws,Platforms
+146,android,Platforms
+147,macos,Platforms
+148,raspberry-pi,Platforms
+149,wordpress,Platforms
+150,google-cloud-platform,Platforms
+151,ios,Platforms
+152,kubernetes,Platforms
+153,herocu,Platforms
+154,arduino,Platforms
+155,slack-apps,Platforms
+156,slack-integrations,Platforms
+157,ibm-watson,Platforms
+158,serverless,Platforms
+159,sharepoint,Platforms
+160,esp8266,Platforms
+161,salesforce,Platforms
+162,google-home,Platforms
+163,mainframe,Platforms
+164,predix,Platforms
+165,windows-phone,Platforms
+166,lamp,Platforms
+167,ubuntu,Platforms
+168,debian,Platforms
+169,fedora,Platforms
+170,amazon-web-services,Platforms
+171,amazon-rds,Platforms
+172,hazelcast,Platforms
+173,mysql,Databases
+174,postgresql,Databases
+175,sql-server,Databases
+176,firebase,Databases
+177,mongodb,Databases
+178,redis,Databases
+179,mariadb,Databases
+180,oracle,Databases
+181,elasticsearch,Databases
+182,dynamodb,Databases
+183,cassandra,Databases
+184,couchbase,Databases
+185,cosmosdb,Databases
+186,neo4j,Databases
+187,hive,Databases
+188,google-bigquery,Databases
+189,aurora,Databases
+190,memcached,Databases
+191,amazon-dynamodb,Databases
+192,sqlite,Databases
