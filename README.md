@@ -17,7 +17,7 @@ pip install flask
 ```
 flask run
 ```
-7. Visit the http://localhost:5000/ url on your browser and the **_COVID-Vis Dashboard_**  will be located there
+7. Visit the http://localhost:5000/ url on your browser and the **_LensLM Dashboard_**  will be located there
 
 
 
