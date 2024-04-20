@@ -68,7 +68,8 @@ def save_to_mongodb(data):
 
 
 def get_questions_by_tag(tags):
-    SITE = StackAPI('stackoverflow') 
+    # API_KEY = '*********'
+    SITE = StackAPI('stackoverflow') # key = API_KEY
     question_data_list = []
     
     for tag in tags:
