@@ -2,10 +2,6 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 
 from flask import Flask
 
-from flask_pymongo import PyMongo
-
-mongo = PyMongo()
-
 from pymongo import MongoClient
 
 from itertools import islice, combinations
@@ -22,7 +18,182 @@ from operator import itemgetter
 
 from statistics import median
 
+import numpy as np
+
+import pandas as pd
+
+import joblib
+
+from sentence_transformers import SentenceTransformer
+
+import matplotlib.pyplot as plt
+
+from sentence_transformers import SentenceTransformer
+
+from bertopic import BERTopic
+
+from umap import UMAP
+
+from datetime import datetime
+
+from sklearn.ensemble import RandomForestClassifier
+
+from scipy.stats import mannwhitneyu
+
 app = Flask(__name__)
+
+documents = pd.read_csv("static/models/LLM-db.questions.csv")
+model = BERTopic.load("static/models/Bertopic_model_reduced_30_topics")
+sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
+model_class = joblib.load('static/models/random_forest_model.joblib')
+
+####Predict the topic and embedding of a list of texts (new_docs)
+####In the tool use this function to predict the topic of one text
+####Remember that topic -1 means that the text was not assigned to a topic and the rest responses indicate a topic assignement
+def predict_topic_new_docs(new_docs):
+    
+    new_embs = sentence_model.encode(new_docs, show_progress_bar=True)
+    new_docs_topics=model.transform(new_docs,new_embs)
+    return ({"topic":new_docs_topics})
+
+####Predict the texts from a list of texts (new_docs) relevant to ChatGPT
+####Returns the class of the texts, 1 for ChatGPT and 0 for non ChatGPT, and their probability being related to ChatGPT (second column) and to non ChatGPT (first column)
+####In the tool use this function to predict the class and probability of one text
+def predict_class_new_docs(new_docs):
+
+    new_embs = sentence_model.encode(new_docs, show_progress_bar=True)
+    new_docs_class = model_class.predict(new_embs)
+    new_docs_class_prob = model_class.predict_proba(new_embs)
+    result_dict = {}
+    for i, doc in enumerate(new_docs):
+        result_dict[doc] = [new_docs_class[i], new_docs_class_prob[i][0], new_docs_class_prob[i][1]]
+    return result_dict
+
+#####Returns two pandas dataframes relevant to topic popularity (tp_pop_mat) and difficulty (tp_dif_mat)
+#####Two dates are used to calculate the popularity and difficulty of the topics within that time span
+#####date_format = "%Y-%m-%d %H:%M:%S%z"
+def topic_popularity_difficulty(earliest_date,latest_date):
+
+    topic_assignemnts=pd.DataFrame(model.topics_)
+    topic_assignemnts=topic_assignemnts.loc[documents['timestamps'] >= earliest_date,:]
+    topic_assignemnts=topic_assignemnts.loc[documents['timestamps'] <= latest_date,:]
+
+
+    df=documents.loc[documents['timestamps'] >= earliest_date  ,:]
+    df=df.loc[documents['timestamps'] <= latest_date ,:]
+
+
+    tp_pop_mat=pd.DataFrame(0,columns=['Avg_views','Avg_score','Avg_comments'],index=range(len(model.topic_sizes_)))
+    tp_pop_df_cols=['views','votes','comments']
+
+
+    tp_dif_mat= pd.DataFrame(0,columns=['Avg_answers','Perc_with_acc','Avg_hrs_to_first_answer',"PD"],index=range(len(model.topic_sizes_)))
+
+
+    date_string = "2024-04-01 13:56:21Z"
+    date_format = "%Y-%m-%d %H:%M:%S%z"
+
+    for i in range(len(tp_pop_mat)):
+        df_topic=df.loc[topic_assignemnts[0]==(i-1),]
+
+        if (len(df_topic) > 0):
+            for j in range(len(tp_pop_mat.columns)):
+                tp_pop_mat.loc[tp_pop_mat.index[i], tp_pop_mat.columns[j]] = sum(df_topic[tp_pop_df_cols[j]]) / len(df_topic)
+
+            tp_dif_mat.loc[tp_pop_mat.index[i], 'Avg_answers'] = sum(df_topic['answers']) / len(df_topic)
+            tp_dif_mat.loc[tp_pop_mat.index[i], 'PD'] = (tp_dif_mat.loc[tp_dif_mat.index[i],'Avg_answers']/tp_pop_mat.loc[tp_pop_mat.index[i],'Avg_views'] )*100
+
+            df_topic_first_ans=df_topic.loc[df_topic['answers']>0,["timestamps","first_answer"]]#["timestamp","first_answer"]
+            if (len(df_topic_first_ans)>0):
+                date_list=[]
+                for j in range(len(df_topic_first_ans)):
+                    if (df_topic_first_ans['first_answer'][df_topic_first_ans.index[j]]!="No answers"):
+                        date_first = datetime.strptime(df_topic_first_ans['timestamps'][df_topic_first_ans.index[j]],date_format)
+                        date_second = datetime.strptime(df_topic_first_ans['first_answer'][df_topic_first_ans.index[j]],date_format)
+                        difference = date_second - date_first
+                        date_list.append(difference.total_seconds())
+                if(len(date_list)!=0):
+                    tp_dif_mat['Avg_hrs_to_first_answer'][tp_dif_mat.index[i]] = sum(date_list) / (3600 * len(date_list))
+    return(tp_pop_mat,tp_dif_mat)
+
+#Returns a dictionary containing information relevant to the growth of the topics according to their overall prevalence in two different dates
+#topic_length_early = Number of questions belonging to each topic until the earliest date
+#topic_length_late = Number of questions belonging to each topic until the latest date
+#share_early = The percentage of questions belonging to each topic until the earliest date
+#share_late = The percentage of questions belonging to each topic until the latest date
+#self_growth = The percentage that a topic has grown within the two dates
+#all_growth = The percentage of the change in the overall prevalence of each topic compared to the rest topics
+#####date_format = "%Y-%m-%d %H:%M:%S%z"
+def growth_topic(earliest_date,latest_date):
+
+    topic_assignemnts = pd.DataFrame(model.topics_)
+    topic_assignemnts_early=topic_assignemnts.loc[documents['timestamps'] <= earliest_date, :]
+    topic_assignemnts_late=topic_assignemnts.loc[documents['timestamps'] <= latest_date, :]
+
+
+    share_early=[]
+    share_late=[]
+    self_growth=[]
+    all_perc=[]
+    len_early_list=[]
+    len_late_list=[]
+
+    for i in range(model.nr_topics):
+        len_early=len(topic_assignemnts_early.loc[topic_assignemnts_early[0]==(i-1),])
+        len_early_list.append(len_early)
+
+        len_late=len(topic_assignemnts_late.loc[topic_assignemnts_late[0]==(i-1),])
+        len_late_list.append(len_late)
+        if(len_early != 0  and len_late !=0):
+            share_early.append(len_early/len(topic_assignemnts_early))
+            share_late.append(len_late/len(topic_assignemnts_late))
+
+            self_growth.append((len_late-len_early)/len_early)
+
+            perc_early=len_early/len(topic_assignemnts_early)
+            perc_late=len_late/len(topic_assignemnts_late)
+
+            all_perc.append((perc_late-perc_early))#/perc_early)
+        else:
+            share_early.append(0)
+            share_late.append(0)
+            self_growth.append(0)
+            perc_early = 0
+            perc_late = 0
+            all_perc.append(0)  # /perc_early)
+
+    return({"topic_length_early":len_early_list,"topic_length_late":len_late_list,"share_early":share_early,"share_late":share_late,"self_grown":self_growth,"all_growth":all_perc})
+
+####Compare two topics with , topic_no_1 and topic_no_2 using the MannWhitney U test with respect to a metric and two dates
+####Topic_no_1 and topic_no_2 must be numerical
+####metric is a list of numerical values
+####earliest and latest date are defined as previously
+####Returns a dictionary with the pvalues (P-value) , U statistic (Statistic) and the alternative hypothesis of three MannWhitney U tests
+#####date_format = "%Y-%m-%d %H:%M:%S%z"
+def pairwise_topic_comparisons(topic_no_1,topic_no_2,metric,earliest_date,latest_date):
+    #https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mannwhitneyu.html
+    topic_assignemnts = pd.DataFrame(model.topics_)
+
+    topic_assignemnts_1=[]
+    topic_assignemnts_2=[]
+
+    for i in range(len(documents)):
+        if documents["timestamps"][documents.index[i]]>=earliest_date:
+            if documents["timestamps"][documents.index[i]] <= latest_date:
+                if topic_assignemnts[0][i]==topic_no_1:
+                    topic_assignemnts_1.append(metric[i])
+                elif topic_assignemnts[0][i]==topic_no_2:
+                    topic_assignemnts_2.append(metric[i])
+
+    res_G=mannwhitneyu(topic_assignemnts_1,topic_assignemnts_2,alternative="greater")
+    res_L=mannwhitneyu(topic_assignemnts_1,topic_assignemnts_2,alternative="less")
+    res_two=mannwhitneyu(topic_assignemnts_1,topic_assignemnts_2,alternative="two-sided")
+
+    test_list=[f"Topic {topic_no_1} greater than {topic_no_2}",f"Topic {topic_no_2} greater than {topic_no_1}","There is difference between the two topics"]
+    pvalue_list=[res_G.pvalue,res_L.pvalue,res_two.pvalue]
+    statistic_list=[res_G.statistic,res_L.statistic,res_two.statistic]
+
+    return({"Alternative Hypothesis":test_list,"P-value":pvalue_list,"Statistic":statistic_list})
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -289,7 +460,6 @@ def index():
     sorted_comments_distribution_labels = list(sorted_comments_distribution.keys())
     sorted_comments_distribution_values = list(sorted_comments_distribution.values())
 
-    print(answers_distribution)
     sorted_answers_distribution = dict(sorted(answers_distribution.items(), key=lambda x:x[0]))
     sorted_answers_distribution_labels = list(sorted_answers_distribution.keys())
     sorted_answers_distribution_values = list(sorted_answers_distribution.values())
@@ -1208,7 +1378,7 @@ def index():
     top_10_inclusion_index = dict(islice(inclusion_index_dict.items(), 10))
     
 
-
+    #predict_class_new_docs_dict={}
 
     
     return render_template('index.html', questions=questions, question_count=question_count, users=users, labels=labels,
@@ -1306,19 +1476,25 @@ def index():
                             top_10_platforms_response_time_reverse=top_10_platforms_response_time_reverse,
                             top_10_collaboration_tools_response_time_reverse=top_10_collaboration_tools_response_time_reverse,
                             top_10_dev_tools_response_time_reverse=top_10_dev_tools_response_time_reverse,
-                            top_10_sorted_ids_and_response_time_reverse=top_10_sorted_ids_and_response_time_reverse
+                            top_10_sorted_ids_and_response_time_reverse=top_10_sorted_ids_and_response_time_reverse,
+                            predict_class_new_docs_dict = {},res_dif_0_formatted = {}, res_dif_1_formatted = {}, res_growth_dict={}, ptc_dict = {}
                            )
-@app.route('/get_lda')
+@app.route('/get_bert')
 def get_map():
-    return render_template('bert_visualize_docs.html')
+    return render_template('topic_visualization/bert_visualize_docs_reduced.html')
 
-@app.route('/get_lda2')
+@app.route('/get_bert2')
 def get_map2():
-    return render_template('bert_visualize_hierarchy.html')
+    return render_template('topic_visualization/bert_visualize_hierarchy_reduced.html')
 
-@app.route('/get_lda3')
+@app.route('/get_bert3')
 def get_map3():
-    return render_template('lda_PCI_9_topics_Titles.html')
+    return render_template('topic_visualization/bert_visualize_reduced.html')
+
+@app.route('/get_ap_ii')
+def get_map4():
+    return render_template('topic_visualization/ap_ii_network.html')
+
 @app.route('/get_dates', methods=['GET'])
 def fetch():
     client = MongoClient('localhost', 27017)
@@ -1326,7 +1502,7 @@ def fetch():
     covidCollection = db.questions
     date_from = request.args.get('dateFrom')
     date_to = request.args.get('dateTo')
-    closed = int(request.args.get('inclClosed'))
+    closed = int(request.args.get('inclClosed')) if request.args.get('inclClosed') != None else 0
     if closed == 1: # all questions
         query = {'timestamps': {'$gte': date_from, '$lte': date_to}}
     elif closed == 0: # only open questions
@@ -2545,7 +2721,77 @@ def fetch():
 
     inclusion_index_dict = dict(sorted(inclusion_index_dict.items(), key=lambda x: x[1], reverse=True))
     top_10_inclusion_index = dict(islice(inclusion_index_dict.items(), 10))
+    
+    earliest_date = date_from + '00:00:00Z'
+    latest_date = date_to + '00:00:00Z'
+    search_terms = request.args.get('searchTerms')
+    predict_class_new_docs_dict={}
+    if search_terms != None:
+        search_terms_list = search_terms.split("; ")
+        
+        predict_class_new_docs_dict = predict_class_new_docs(search_terms_list)
+        predict_topic_new_docs_dict = predict_topic_new_docs(search_terms_list)
+                
+        predict_topic_new_docs_value_list = predict_topic_new_docs_dict['topic'][0]
+        i=0
+        for key, value_list in predict_class_new_docs_dict.items():
+            value_list.append(predict_topic_new_docs_value_list[i])
+            i+=1
+        
+        
+    res_pop_dif=topic_popularity_difficulty(earliest_date,latest_date)
+    avg_score=res_pop_dif[0]["Avg_score"].tolist()
+    avg_views=res_pop_dif[0]["Avg_views"].tolist()
+    avg_answers=res_pop_dif[1]["Avg_answers"].tolist()
+    avg_hours_to_first_answer=res_pop_dif[1]["Avg_hrs_to_first_answer"].tolist()
+    pd=res_pop_dif[1]["PD"].tolist()
+    
 
+    res_dif_0_formatted = {}
+    for idx, row in res_pop_dif[0].iterrows():
+        res_dif_0_formatted[idx] = row.values.tolist()
+        
+    res_dif_1_formatted = {}
+    for idx, row in res_pop_dif[1].iterrows():
+        res_dif_1_formatted[idx] = row.values.tolist()
+        
+    res_growth=growth_topic(earliest_date, latest_date)
+    topic_length_early = res_growth['topic_length_early']
+    print(topic_length_early)
+    topic_length_late = res_growth['topic_length_late']
+    share_early = res_growth['share_early']
+    share_late = res_growth['share_late']
+    self_grown = res_growth['self_grown']
+    all_growth = res_growth['all_growth']
+    res_growth_dict = {}
+
+    for key in res_growth:
+        for i, value in enumerate(res_growth[key]):
+            if i not in res_growth_dict:
+                res_growth_dict[i] = []
+            res_growth_dict[i].append(value)
+    
+    topic_no_1 = request.args.get('topicNo1')
+    topic_no_2 = request.args.get('topicNo2')
+    metric_option = request.args.get('metric')
+    print(metric_option)
+    ptc_dict = {}
+    if (topic_no_1 != None and topic_no_2 != None and metric_option != None) :
+        if metric_option == 'views':
+            metric=documents['views']
+        elif metric_option == 'votes':
+            metric=documents['votes']
+        else:
+           metric=documents['answers'] 
+           
+        
+        ptc=pairwise_topic_comparisons(int(topic_no_1),int(topic_no_2),metric,earliest_date,latest_date)
+    
+        for key in ptc:
+            for i, value in enumerate(ptc[key]):
+                if i not in ptc_dict:
+                    ptc_dict[i] = []
+                ptc_dict[i].append(value)
 
 
     return render_template('index.html',  questions=questions, question_count=question_count, users=users, labels=labels,
@@ -2643,7 +2889,13 @@ def fetch():
                             top_10_platforms_response_time_reverse=top_10_platforms_response_time_reverse,
                             top_10_collaboration_tools_response_time_reverse=top_10_collaboration_tools_response_time_reverse,
                             top_10_dev_tools_response_time_reverse=top_10_dev_tools_response_time_reverse,
-                            top_10_sorted_ids_and_response_time_reverse=top_10_sorted_ids_and_response_time_reverse
+                            top_10_sorted_ids_and_response_time_reverse=top_10_sorted_ids_and_response_time_reverse,
+                            predict_class_new_docs_dict = predict_class_new_docs_dict,
+                            res_dif_0_formatted = res_dif_0_formatted, res_dif_1_formatted = res_dif_1_formatted,
+                            res_growth_dict = res_growth_dict, share_late = share_late, all_growth = all_growth,
+                            avg_score = avg_score, pd = pd, avg_views = avg_views, avg_answers = avg_answers, 
+                            avg_hours_to_first_answer = avg_hours_to_first_answer, topic_length_early = topic_length_early,
+                            topic_length_late = topic_length_late, share_early = share_early, self_grown = self_grown, ptc_dict = ptc_dict
                            )
 
 if __name__ == "__main__":

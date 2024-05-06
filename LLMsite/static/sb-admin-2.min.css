@@ -7508,6 +7508,15 @@ button.bg-dark:focus {
   }
 }
 
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+  .sticky-top-2 {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 10001;
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -9763,7 +9772,7 @@ a:focus {
 #wrapper #content-wrapper {
   background-color: #f8f9fc;
   width: 100%;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 #wrapper #content-wrapper #content {

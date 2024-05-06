@@ -9,10 +9,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>CovidFlow Dashboard</title>
+    <title>ChatQAnalytics</title>
 
     <!-- Add the svg in the path "covidsite/static/favicon.svg" as a favicon -->
-    <link rel="icon" href="{{ url_for('static',filename='favicon.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ url_for('static',filename='icon.png') }}" type="image/svg+xml">
     <!-- Custom fonts for this template-->
     <link href="{{ url_for('static',filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
           type="text/css">
@@ -34,6 +34,7 @@
         .collapsed .rotate-icon {
             transform: rotate(-180deg);
         }
+        
     </style>
 
 
@@ -48,7 +49,7 @@
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
             <!--<div class="sidebar-brand-text mx-3">CovidVis</div>-->
-            <img src="{{ url_for('static',filename='covidvis.svg') }}" alt="CovidVis" width="200" height="100">
+            <img src="{{ url_for('static',filename='logo.png') }}" alt="ChatQAnalytics" width="200" height="200">
         </a>
         <br>
         <!-- Divider -->
@@ -65,7 +66,7 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#lineChartRelatedSearches">
-                    <span>Line Chart Of Covid-19 Related Searches</span>
+                    <span>Line Chart Of ChatGPT Related Searches</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -75,27 +76,12 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#wordCloudChart">
-                    <span>Wordcloud Of Most Used Tags</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#barChartTags">
-                    <span>Barchart Of Most Used Tags</span>
+                    <span>Wordcloud/Barchart Of Most Used Tags</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#worldMap">
                     <span>User World Map</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#radarChartTechnologies">
-                    <span>Radar Chart Of Most Used Tags</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#doughnutChart">
-                    <span>Doughnut Chart of Questions Containing Code Snippets</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -114,30 +100,40 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link collapsed" href="#predictClassNewDocsCard">
+                    <span>Predict Class New Docs</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#topicPopularityDifficultyCard">
+                    <span>Topic Popularity Difficulty</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#growthTopicCard">
+                    <span>Topic Growth</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#plot2dMetricsCard">
+                    <span>Plot 2D Topic Metrics</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#pairWiseTopicComparisonsCard">
+                    <span>Pairwise Topic Comparison</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="#chordDiagram">
                     <span>Chord Diagram</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#top10InclusionIndex">
-                    <span>Top 10 Co-occuring tags based on the Inclusion Index</span>
+            <!--<li class="nav-item">
+                <a class="nav-link collapsed" href="#doughnutChart">
+                    <span>Doughnut Chart of Questions Containing Code Snippets</span>
                 </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#medianTimesTable">
-                    <span>Median time elapsed until the first answer per Competence Group</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#survivalCurves">
-                    <span>Survival Curves</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#questionDistributionPerGroupChart">
-                    <span>Question Distribution per Competence group</span>
-                </a>
-            </li>
+            </li>-->
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline" style="padding-left: 60px;">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
@@ -193,7 +189,7 @@
                 <!-- Content Row -->
                 <div class="row">
                     <!-- Number of Questions Card  -->
-                    <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="col-xl-4 col-md-6 mb-4">
                         <div class="card border-left-primary shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
@@ -210,26 +206,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Number of Users Card  -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Number Of Users
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ users }}</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-user fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <!-- Last Updated Card  -->
-                    <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="col-xl-4 col-md-6 mb-4">
                         <div class="card border-left-info shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
@@ -237,7 +216,7 @@
                                         <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                             Last Updated
                                         </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">2022-3-17</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">2024-5-26</div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -247,7 +226,7 @@
                         </div>
                     </div>
                     <!-- Pending Requests Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="col-xl-4 col-md-6 mb-4">
                         <div class="card border-left-warning shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
@@ -268,7 +247,7 @@
                 <!-- Content Row -->
                 <div class="row">
                     <!-- Number of Questions Card  -->
-                    <div class="col-xl-4 col-md-6 mb-4">
+                    <!-- <div class="col-xl-4 col-md-6 mb-4">
                         <div class="card border-left-danger shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
@@ -280,6 +259,24 @@
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-comment fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- Number of Users Card  -->
+                    <div class="col-xl-4 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            Number Of Users
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ users }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-user fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
                             </div>
@@ -324,48 +321,51 @@
                     <div class="col-xl-3 col-md-6 mb-4">
                     </div>
                 </div>
-                <div class="row">
+
+                <div class="row sticky-top-2" id="stickyCard">
                     <div class=" col-xl-12 ">
-                      <div class="card shadow mb-4">
-                        <!-- Card Header - Dropdown -->
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" >
-                          <h6 class="m-0 font-weight-bold text-primary">See Data For Specific Time Windows
-                            <div class="tooltip2"><i class="fas fa-info-circle"></i>
-                              <span class="tooltiptext"> Define the time window you want to see data for.
-                              </span>
-                            </div>
-                          </h6>
-                        </div>
-                        <div class="card-body">
-                          <div class="row">
-                            <div class=" col-xl-4 ">
-                              <div class="md-form md-outline input-with-post-icon datepicker">
-                                <input placeholder="Select date" type="date" id="dateFrom" class="form-control" value="{{ date_from }}">
-                                <label for="dateFrom">Date From</label>
-                              </div>
-                            </div>
-                            <div class=" col-xl-4 ">
-                              <div class="md-form md-outline input-with-post-icon datepicker">
-                                <input placeholder="Select date" type="date" id="dateTo" class="form-control" value="{{ date_to }}">
-                                <label for="dateTo">Date To</label>
-                              </div>
-                            </div>
-                            <div class=" col-xl-2 ">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox"  id="includeClosedQuestionsCheckbox">
+                        <div class="card shadow mb-4">
+                            <!-- Card Header - Dropdown -->
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between " >
+                                <h6 class="m-0 font-weight-bold text-primary">Define Time Frame
                                     <div class="tooltip2"><i class="fas fa-info-circle"></i>
-                                        <span class="tooltiptext">Include closed/deleted questions</span>
+                                    <span class="tooltiptext"> Define the time window you want to see data for.
+                                    </span>
                                     </div>
+                                </h6>
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" id="toggleSticky" checked data-toggle="toggle" data-on="Sticky" data-off="Non Sticky" data-size="sm">
                                 </div>
                             </div>
-                            <div class=" col-xl-2 ">
-                              <button type="button" class="btn btn-primary" id="datepicker" >Search</button>
-                            </div>
-                            
-                          </div>
-                        </div>
-                      </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class=" col-xl-4 ">
+                                        <div class="md-form md-outline input-with-post-icon datepicker">
+                                            <input placeholder="Select date" type="date" id="dateFrom" class="form-control" value="{{ date_from }}">
+                                            <label for="dateFrom">Date From</label>
+                                        </div>
+                                    </div>
+                                    <div class=" col-xl-4 ">
+                                        <div class="md-form md-outline input-with-post-icon datepicker">
+                                            <input placeholder="Select date" type="date" id="dateTo" class="form-control" value="{{ date_to }}">
+                                            <label for="dateTo">Date To</label>
+                                        </div>
+                                    </div>
+                                    <div class=" col-xl-2 ">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"  id="includeClosedQuestionsCheckbox">
+                                            <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                                <span class="tooltiptext">Include closed/deleted questions</span>
+                                            </div>
+                                        </div>
 
+                                    </div>
+                                    <div class=" col-xl-2 ">
+                                        <button type="button" class="btn btn-primary" id="datepicker" >Search</button>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- Content Row -->
@@ -376,8 +376,8 @@
                             <!-- Card Header - Dropdown -->
                             <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
-                                    id="linelineChartRelatedSearchesChart">
-                                <h6 class="m-0 font-weight-bold text-primary">Line Chart Of Covid-19 Related Searches
+                                    id="lineChartRelatedSearches">
+                                <h6 class="m-0 font-weight-bold text-primary">Line Chart Of ChatGPT Related Searches
                                     <div class="tooltip2"><i class="fas fa-info-circle"></i>
                                         <span class="tooltiptext">In the Daily Line Chart, the x-axis represents the dates that the question were asked
                                          by the users and the y-axis represents the number of questions that were asked at that date, while in the
@@ -421,23 +421,28 @@
                                 </h6>     
                             </div>
                             <div class="card-body" >
-                                <div style="display: flex;">
-                                    <div class="chart-area">
-                                        <canvas id="votesDistributionChart" height="150"></canvas>
+                                <div class = "row"> 
+                                    <div class = "col-6"> 
+                                        <div class="chart-area">
+                                            <canvas id="votesDistributionChart" height="150"></canvas>
+                                        </div>
                                     </div>
-                                    <div class="chart-area">
+                                    <div class = "col-6"> 
+                                        <div class="chart-area">
+                                            <canvas id="answersDistributionChart" height="150"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class = "row"> 
+                                    <div class = "col-12"> 
+                                        <div class="chart-area">
+                                            <canvas id="viewsDistributionChart" height="100"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <!--<div class="chart-area">
                                         <canvas id="commentsDistributionChart" height="150"></canvas>
-                                    </div>
-                                </div>
-                                <div style="display: flex;">
-                                    <div class="chart-area">
-                                        <canvas id="answersDistributionChart" height="150"></canvas>
-                                    </div>
-                                    <div class="chart-area">
-                                        <canvas id="viewsDistributionChart" height="150"></canvas>
-                                    </div>
-                                </div>
-                                
+                                    </div>-->     
                             </div>
                         </div>
                     </div>
@@ -515,7 +520,7 @@
                 <!-- Content Row -->
                 <div class="row">
                     <!-- Content Column -->
-                    <div class="col-lg-6 mb-4">
+                    <!--<div class="col-lg-6 mb-4">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3" id="radarChartTechnologies">
                                 <h6 class="m-0 font-weight-bold text-primary">Radar Chart of Most Used Technologies
@@ -564,7 +569,7 @@
                                   </div>   
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="row">
                     <!-- Content Column -->
@@ -578,7 +583,7 @@
                                          criteria</span>
                                     </div>
                                 </h6>
-                                <div>
+                               <!-- <div>
                                     <select class="custom-select" id="classSelect" onchange="update()">
                                         <option value="All">All</option>
                                         <option value="Languages">Languages</option>
@@ -589,7 +594,7 @@
                                         <option value="Collaboration Tools">Collaboration Tools</option>
                                         <option value="Developer Tools">Developer Tools</option>
                                     </select>
-                                </div>
+                                </div>-->
                                 <div>
                                     <select class="custom-select" id="topSelect" onchange="update()">
                                         <option value="Votes">Votes</option>
@@ -664,17 +669,262 @@
                                 </h6>
                             </div>
                             <div class="card-body">
-                                <iframe style="width: 100%;height: 900px; " frameborder="0"
-                                        src="/get_lda"></iframe>
-                                <iframe style="width: 100%;height: 700px; " frameborder="0"
-                                        src="/get_lda2"></iframe>
-                                <iframe style="width: 100%;height: 700px; " frameborder="0"
-                                        src="/get_lda3"></iframe>
+                                <div style="display: flex;">
+                                    <iframe style="width: 100%;height: 900px; " frameborder="0"
+                                        src="/get_bert"></iframe>
+                                </div>
+                                <div style="display: flex;">
+                                    <div class="chart-area">
+                                        <iframe style="width: 100%;height: 700px; " frameborder="0"
+                                        src="/get_bert2"></iframe>
+                                    </div>
+                                    <div class="chart-area">
+                                        <iframe style="width: 100%;height: 700px; " frameborder="0"
+                                        src="/get_bert3"></iframe>
+                                    </div>
+                                </div>
+                                <!--<div style="display: flex;">
+                                    <iframe style="width: 100%;height: 1400px; " frameborder="0"
+                                        src="/get_ap_ii"></iframe>
+                                </div> -->
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-lg-12 mb-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="predictClassNewDocsCard">
+                                <h6 class="m-0 font-weight-bold text-primary">Predict Class New Docs
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
+                                    </div>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <form class="form-inline my-2 my-lg-0">
+                                    <div class="col-10">
+                                        <input class="form-control mr-sm-2 w-100" type="search" placeholder="Search" aria-label="Search" id="searchTerms">
+                                    </div>
+                                    <button type="button" class="btn btn-primary" id="topicSearch">Search</button>
+                                </form>
+                                <br>
+                                <div class="predictClassNewDocs">
+                                    <table class="table table-striped" id="predictClassNewDocs" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="10%" scope="col">#</th>
+                                                <th width="40%" scope="col">Search Term</th>
+                                                <th width="12.5%" scope="col">Class</th>
+                                                <th width="12.5%" scope="col">ChatGPT </th>
+                                                <th width="12.5%" scope="col">Non ChatGPT </th>
+                                                <th width="12.5%" scope="col">Topic </th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 mb-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="topicPopularityDifficultyCard">
+                                <h6 class="m-0 font-weight-bold text-primary">Topic Popularity Difficulty
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
+                                    </div>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="topicPopularityDifficulty1">
+                                            <table class="table table-striped" id="topicPopularityDifficulty1" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="10%" scope="col">#</th>
+                                                        <th width="45%" scope="col">Avg Views</th>
+                                                        <th width="45%" scope="col">Avg Score</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="topicPopularityDifficulty2">
+                                            <table class="table table-striped" id="topicPopularityDifficulty2" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="10%" scope="col">#</th>
+                                                        <th width="25%" scope="col">Avg Answers</th>
+                                                        <th width="40%" scope="col">Avg Hours To First Answer</th>
+                                                        <th width="25%" scope="col">PD</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 mb-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="growthTopicCard">
+                                <h6 class="m-0 font-weight-bold text-primary">Topic Growth
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
+                                    </div>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="growthTopic">
+                                    <table class="table table-striped" id="growthTopic" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="10%" scope="col">#</th>
+                                                <th width="15%" scope="col">Topic Length Early</th>
+                                                <th width="15%" scope="col">Topic Length Late</th>
+                                                <th width="15%" scope="col">Share Early</th>
+                                                <th width="15%" scope="col">Share Late</th>
+                                                <th width="15%" scope="col">Self Grown</th>
+                                                <th width="15%" scope="col">All Growth</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-12 mb-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="plot2dMetricsCard">
+                                <h6 class="m-0 font-weight-bold text-primary">Plot 2D Topic Metrics
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
+                                    </div>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label for="thresX">Threshold X</label>
+                                            <input class="form-control mr-sm-2 w-100" type="number"  id="thresX" step="0.1" value="0">
+                                        </div>
+                                        <div class="col-3">
+                                            <label for="thresY">Threshold Y</label>
+                                            <input class="form-control mr-sm-2 w-100" type="number" id="thresY" step="0.1" value="0">
+                                        </div>
+                                        <div class="col-3">
+                                            <label for="metric1">Metric 1</label>
+                                            <select class="form-control mr-sm-2 w-100" id="metric1">
+                                                <option value="avgViews">Avg Views</option>
+                                                <option value="avgScore">Avg Score</option>
+                                                <option value="avgAnswers">Avg Answers</option>
+                                                <option value="avgHoursToFirstAnswer">Avg Hours To First Answer</option>
+                                                <option value="pd">PD</option>
+                                                <option value="topicLengthEarly">Topic Length Early</option>
+                                                <option value="topicLengthLate">Topic Length Late</option>
+                                                <option value="shareEarly">Share Early</option>
+                                                <option value="shareLate">Share Late</option>
+                                                <option value="selfGrown">Self Grown</option>
+                                                <option value="allGrowth">All Growth</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <label for="metric2">Metric 2</label>
+                                            <select class="form-control mr-sm-2 w-100" id="metric2">
+                                                <option value="avgAnswers">Avg Answers</option>
+                                                <option value="avgHoursToFirstAnswer">Avg Hours To First Answer</option>
+                                                <option value="avgScore">Avg Score</option>
+                                                <option value="avgViews">Avg Views</option>
+                                                <option value="allGrowth">All Growth</option>
+                                                <option value="selfGrown">Self Grown</option>
+                                                <option value="shareLate">Share Late</option>
+                                                <option value="shareEarly">Share Early</option>
+                                                <option value="topicLengthLate">Topic Length Late</option>
+                                                <option value="topicLengthEarly">Topic Length Early</option>
+                                                <option value="pd">PD</option>
+                                                
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <canvas id="topicPlot1" height="150"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 mb-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="pairWiseTopicComparisonsCard">
+                                <h6 class="m-0 font-weight-bold text-primary">Pairwise Topic Comparisons
+                                    <div class="tooltip2"><i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
+                                    </div>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="pairWiseTopicComparisons">
+                                    
+                                    <form >
+                                        <div class = "row">
+                                        
+                                            <div class="col-3">
+                                                <label for="topicNo1">Topic No 1</label>
+                                                <input class="form-control mr-sm-2 w-100" type="number"  id="topicNo1" step="1" min="-1" max="28">
+                                                <small id="topicNo1Help" class="form-text text-muted">Topic numbers range from -1 to 28</small>
+                                            </div>
+                                            <div class="col-3">
+                                                <label for="topicNo2">Topic No 2</label>
+                                                <input class="form-control mr-sm-2 w-100" type="number" id="topicNo2" step="1" min="-1" max="28">
+                                                <small id="topicNo2Help" class="form-text text-muted">Topic numbers range from -1 to 28</small>
+                                            </div>
+                                            <div class="col-3">
+                                                <label for="metric">Metric</label>
+                                                <select class="form-control mr-sm-2 w-100" id="metric">
+                                                    <option disabled selected value> -- select an option -- </option>
+                                                    <option value="views">Views</option>
+                                                    <option value="votes">Votes</option>
+                                                    <option value="answers">Answers</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-3">
+                                                <button type="button" class="btn btn-primary" id="pairWiseTopicComparisonsSearch" style="margin-top:30px;">Search</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <br>
+                                    <div class="row">
+                                        <table class="table table-striped" id="pairWiseTopicComparisons" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th width="10%" scope="col">#</th>
+                                                    <th width="50%" scope="col">Alternative Hypothesis</th>
+                                                    <th width="20%" scope="col">P-Value</th>
+                                                    <th width="20%" scope="col">Statistic</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row">
                     <!-- Content Column -->
@@ -691,7 +941,7 @@
                                         </span>
                                     </div>   
                                 </h6> 
-                                <div>
+                                <!--<div>
                                     <select class="custom-select" id="classSelectChord">
                                         <option value="All">All Groups</option>
                                         <option value="Languages">Languages</option>
@@ -702,7 +952,7 @@
                                         <option value="Collaboration Tools">Collaboration Tools</option>
                                         <option value="Developer Tools">Developer Tools</option>
                                     </select>
-                                </div>    
+                                </div> -->   
                             </div>
                             <div class="card-body">
                                 <div class="chart-area">
@@ -711,8 +961,41 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-lg-4 mb-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3" id="doughnutChart">
+                                <h6 class="m-0 font-weight-bold text-primary" id="dougnutChartTitle">Doughnut Chart of Questions Containing Code Snippets </h6>
+                            </div>
+                            <div class="card-body">
+
+                                <div id="carouselDoughnut" class="carousel slide" data-ride="carousel" data-interval="10000">
+                                    <div class="carousel-inner">
+                                      <div class="carousel-item active" id="codeSnippet">
+                                        <div class="chart-area">
+                                            <canvas id="doughnutChartCodeSnippets" height="250"></canvas>
+                                        </div>
+                                      </div>
+                                      <div class="carousel-item" id="answered">
+                                        <div class="chart-area">
+                                            <canvas id="doughnutChartAnswered" height="250"></canvas>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <a class="carousel-control-prev" href="#carouselDoughnut" role="button" data-slide="prev">
+                                      <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color:#4e73df;"></span>
+                                      <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carouselDoughnut" role="button" data-slide="next">
+                                      <span class="carousel-control-next-icon" aria-hidden="true" style="background-color:#4e73df;"></span>
+                                      <span class="sr-only">Next</span>
+                                    </a>
+                                  </div>   
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--<div class="col-lg-4 mb-4">
                         <div class = "row"> 
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
@@ -766,12 +1049,12 @@
                             </div>
                         </div>
                         
-                    </div>
+                    </div>-->
                     
                     
                 </div>
-                <div class="row">
-                    <!-- Content Column -->
+                <!--<div class="row">
+                   
                     <div class="col-xl-12">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="survivalCurves">
@@ -797,11 +1080,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Content Row -->
-                <div class="row">
-                    <!-- Content Column -->
+                <!--<div class="row">
+                 
                     <div class="col-xl-6">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="questionDistributionPerGroupChart">
@@ -834,7 +1117,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
 
             </div>
@@ -847,7 +1130,7 @@
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Your Website 2020</span>
+                    <span>Copyright &copy; ChatQAnalytics 2024</span>
                 </div>
             </div>
         </footer>
@@ -901,8 +1184,233 @@
         count++;
     }
 </script>
+<script>
+    'use strict';
+
+    var tbl = document.getElementById('predictClassNewDocs');
+    var tblBody = document.createElement("tbody");
+
+    var predictClassNewDocs = {{ predict_class_new_docs_dict | safe }};
+    var count = 1;
+
+    // Check if there are no data
+    if (Object.keys(predictClassNewDocs).length === 0) {
+        var noDataRow = document.createElement("tr");
+        var noDataCell = document.createElement("td");
+        noDataCell.setAttribute("colspan", "6"); // Span across all columns
+        var noDataText = document.createTextNode("No data available");
+        noDataCell.appendChild(noDataText);
+        noDataRow.appendChild(noDataCell);
+        tblBody.appendChild(noDataRow);
+        tbl.appendChild(tblBody);
+    } else {
+        // Loop through the data and create rows
+        for (const [key, value] of Object.entries(predictClassNewDocs)) {
+            var row = document.createElement("tr");
+
+            // Create and append cells for each column
+            var cell1 = document.createElement("th");
+            var cellText1 = document.createTextNode(count);
+            cell1.appendChild(cellText1);
+            row.appendChild(cell1);
+
+            var cell2 = document.createElement("th");
+            var cellText2 = document.createTextNode(key);
+            cell2.appendChild(cellText2);
+            row.appendChild(cell2);
+
+            var cell3 = document.createElement("th");
+            var cellText3 = document.createTextNode(value[0]);
+            cell3.appendChild(cellText3);
+            row.appendChild(cell3);
+
+            var cell4 = document.createElement("td");
+            var cellText4 = document.createTextNode(value[2].toFixed(2));
+            cell4.appendChild(cellText4);
+            row.appendChild(cell4);
+
+            var cell5 = document.createElement("td");
+            var cellText5 = document.createTextNode(value[1].toFixed(2));
+            cell5.appendChild(cellText5);
+            row.appendChild(cell5);
+
+            var cell6 = document.createElement("td");
+            var cellText6 = document.createTextNode(value[3]);
+            cell6.appendChild(cellText6);
+            row.appendChild(cell6);
+
+            tblBody.appendChild(row);
+            tbl.appendChild(tblBody);
+
+            count++;
+        }
+    }
+
+</script>
 
 <script>
+    'use strict'
+    var tbl = document.getElementById('topicPopularityDifficulty1');
+    var tblBody = document.createElement("tbody");
+
+    var resDif0 =
+    {{ res_dif_0_formatted | safe }}
+    var count = -1;
+    for (const [key, value] of Object.entries(resDif0)) {
+        var row = document.createElement("tr");
+
+        var cell1 = document.createElement("th");
+        var cellText1 = document.createTextNode(count);
+        cell1.appendChild(cellText1);
+        row.appendChild(cell1);
+
+        var cell2 = document.createElement("th");
+        var cellText2 = document.createTextNode(value[0].toFixed(2));
+        cell2.appendChild(cellText2);
+        row.appendChild(cell2);
+
+        var cell3 = document.createElement("th");
+        var cellText3 = document.createTextNode(value[1].toFixed(2));
+        cell3.appendChild(cellText3);
+        row.appendChild(cell3);
+
+        tblBody.appendChild(row);
+        tbl.appendChild(tblBody);
+
+        count++;
+    }
+</script>
+
+<script>
+    'use strict'
+    var tbl = document.getElementById('topicPopularityDifficulty2');
+    var tblBody = document.createElement("tbody");
+
+    var resDif1 =
+    {{ res_dif_1_formatted | safe }}
+    var count = -1;
+    for (const [key, value] of Object.entries(resDif1)) {
+        var row = document.createElement("tr");
+
+        var cell1 = document.createElement("th");
+        var cellText1 = document.createTextNode(count);
+        cell1.appendChild(cellText1);
+        row.appendChild(cell1);
+
+        var cell2 = document.createElement("th");
+        var cellText2 = document.createTextNode(value[0].toFixed(2));
+        cell2.appendChild(cellText2);
+        row.appendChild(cell2);
+
+        var cell4 = document.createElement("td");
+        var cellText4 = document.createTextNode(value[2]);
+        cell4.appendChild(cellText4);
+        row.appendChild(cell4);
+
+        var cell5 = document.createElement("td");
+        var cellText5 = document.createTextNode(value[3].toFixed(2));
+        cell5.appendChild(cellText5);
+        row.appendChild(cell5);
+
+        tblBody.appendChild(row);
+        tbl.appendChild(tblBody);
+
+        count++;
+    }
+</script>
+
+<script>
+    'use strict'
+    var tbl = document.getElementById('growthTopic');
+    var tblBody = document.createElement("tbody");
+
+    var resGrowthDict =
+    {{ res_growth_dict | safe }}
+    var count = -1;
+    for (const [key, value] of Object.entries(resGrowthDict)) {
+        var row = document.createElement("tr");
+
+        var cell1 = document.createElement("th");
+        var cellText1 = document.createTextNode(count);
+        cell1.appendChild(cellText1);
+        row.appendChild(cell1);
+
+        var cell2 = document.createElement("th");
+        var cellText2 = document.createTextNode(value[0]);
+        cell2.appendChild(cellText2);
+        row.appendChild(cell2);
+
+        var cell3 = document.createElement("th");
+        var cellText3 = document.createTextNode(value[1]);
+        cell3.appendChild(cellText3);
+        row.appendChild(cell3);
+
+        var cell4 = document.createElement("td");
+        var cellText4 = document.createTextNode(value[2].toFixed(5));
+        cell4.appendChild(cellText4);
+        row.appendChild(cell4);
+
+        var cell5 = document.createElement("td");
+        var cellText5 = document.createTextNode(value[3].toFixed(5));
+        cell5.appendChild(cellText5);
+        row.appendChild(cell5);
+
+        var cell6 = document.createElement("td");
+        var cellText6 = document.createTextNode(value[4].toFixed(5));
+        cell6.appendChild(cellText6);
+        row.appendChild(cell6);
+
+        var cell7 = document.createElement("td");
+        var cellText7 = document.createTextNode(value[5].toFixed(5));
+        cell7.appendChild(cellText7);
+        row.appendChild(cell7);
+
+        tblBody.appendChild(row);
+        tbl.appendChild(tblBody);
+
+        count++;
+    }
+</script>
+
+<script>
+    'use strict'
+    var tbl = document.getElementById('pairWiseTopicComparisons');
+    var tblBody = document.createElement("tbody");
+
+    var ptcDict =
+    {{ ptc_dict | safe }}
+    var count = 1;
+    for (const [key, value] of Object.entries(ptcDict)) {
+        var row = document.createElement("tr");
+
+        var cell1 = document.createElement("th");
+        var cellText1 = document.createTextNode(count);
+        cell1.appendChild(cellText1);
+        row.appendChild(cell1);
+
+        var cell2 = document.createElement("th");
+        var cellText2 = document.createTextNode(value[0]);
+        cell2.appendChild(cellText2);
+        row.appendChild(cell2);
+
+        var cell3 = document.createElement("th");
+        var cellText3 = document.createTextNode(value[1]);
+        cell3.appendChild(cellText3);
+        row.appendChild(cell3);
+
+        var cell4 = document.createElement("td");
+        var cellText4 = document.createTextNode(value[2]);
+        cell4.appendChild(cellText4);
+        row.appendChild(cell4);
+
+        tblBody.appendChild(row);
+        tbl.appendChild(tblBody);
+
+        count++;
+    }
+</script>
+
+<!--<script>
     'use strict'
     var tbl = document.getElementById('topTenWeirdTagCombos');
     var tblBody = document.createElement("tbody");
@@ -964,7 +1472,7 @@
 
         count++;
     }
-</script>
+</script>-->
 
 <script>
     'use strict'
@@ -1028,37 +1536,37 @@
     function update() {
 
         $("#topTenTable").empty();
-        var selectClass = document.getElementById('classSelect').value;
+        //var selectClass = document.getElementById('classSelect').value;
         var select = document.getElementById('topSelect').value;
         var techClass;
         var items;
-        if (selectClass === "Languages") {
-            if (select === "Votes") {
-                var name = "Votes";
-                topTen =
-                {{ top_10_languages_votes | safe }}
-            } else if (select === "Answers") {
-                var name = "Answers";
-                topTen =
-                {{ top_10_languages_answers | safe }}
-            } else if (select === "Comments") {
-                var name = "Comments";
-                topTen =
-                {{ top_10_languages_comments | safe }}
-            } else if (select === "Views") {
-                var name = "Views";
-                topTen =
-                {{ top_10_languages_views | safe }}
-            } else if (select === "Minimum Response Time"){
-                var name = "Minimum Response Time";
-                topTen =
-                {{ top_10_languages_response_time | safe }}
-            }else {
-                var name = "Maximum Response Time";
-                topTen =
-                {{ top_10_languages_response_time_reverse | safe }}
-            }
-        } else if (selectClass === "Web Frameworks") {
+        //if (selectClass === "Languages") {
+        if (select === "Votes") {
+            var name = "Votes";
+            topTen =
+            {{ top_10_languages_votes | safe }}
+        } else if (select === "Answers") {
+            var name = "Answers";
+            topTen =
+            {{ top_10_languages_answers | safe }}
+        } else if (select === "Comments") {
+            var name = "Comments";
+            topTen =
+            {{ top_10_languages_comments | safe }}
+        } else if (select === "Views") {
+            var name = "Views";
+            topTen =
+            {{ top_10_languages_views | safe }}
+        } else if (select === "Minimum Response Time"){
+            var name = "Minimum Response Time";
+            topTen =
+            {{ top_10_languages_response_time | safe }}
+        }else {
+            var name = "Maximum Response Time";
+            topTen =
+            {{ top_10_languages_response_time_reverse | safe }}
+        }
+        /*} else if (selectClass === "Web Frameworks") {
             if (select === "Votes") {
                 var name = "Votes";
                 topTen =
@@ -1240,7 +1748,7 @@
                 topTen =
                 {{ top_10_sorted_ids_and_response_time_reverse | safe }}
             }
-        }
+        }*/
         var tbl = document.getElementById('topTenTable');
 
         var tblHead = document.createElement("thead");
@@ -1270,7 +1778,6 @@
 
 
         var count = 1;
-        console.log(topTen)
         for (const [key, value] of Object.entries(topTen)) {
             var row = document.createElement("tr");
             var cell1 = document.createElement("th");
@@ -1281,11 +1788,11 @@
             var link = document.createElement("a");
             link.setAttribute("href", key)
             link.setAttribute("target", "blank_")
-            if (selectClass === "All") {
-                var linkText = document.createTextNode(value[1]);
-            } else {
-                var linkText = document.createTextNode(value[5]);
-            }
+            //if (selectClass === "All") {
+            //var linkText = document.createTextNode(value[1]);
+            //} else {
+            var linkText = document.createTextNode(value[5]);
+            //}
             link.appendChild(linkText)
 
             var cell2 = document.createElement("td");
@@ -1293,9 +1800,9 @@
             row.appendChild(cell2);
 
             var cell3 = document.createElement("td");
-            if (selectClass === "All") {
-                var cellText3 = ((select === "Minimum Response Time") || (select === "Maximum Response Time")  ? document.createTextNode(value [0] + ' min') : document.createTextNode(value [0]));
-            } else {
+            //if (selectClass === "All") {
+                //var cellText3 = ((select === "Minimum Response Time") || (select === "Maximum Response Time")  ? document.createTextNode(value [0] + ' min') : document.createTextNode(value [0]));
+            //} else {
                 if (select === "Votes") {
                     var cellText3 = document.createTextNode(value [0]);
                 } else if (select === "Answers") {
@@ -1307,7 +1814,7 @@
                 } else {
                     var cellText3 = document.createTextNode(value [4] + ' min');
                 }
-            }
+            //}
             cell3.appendChild(cellText3);
             row.appendChild(cell3);
 
@@ -1339,6 +1846,8 @@
 <!-- Bootstrap core JavaScript-->
 <script src="{{ url_for('static',filename='vendor/jquery/jquery.min.js') }}"></script>
 <script src="{{ url_for('static',filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
 <script src="{{ url_for('static',filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
@@ -1811,7 +2320,7 @@
 </script>
 
 <!-- Radar Chart script -->
-<script>
+<!--<script>
 
     var ctx = document.getElementById("radarChart").getContext("2d");
 
@@ -1840,7 +2349,7 @@
         }
     });
 
-</script>
+</script>-->
 
 
 <!-- Doughnut Chart Code Snippets script -->
@@ -1904,7 +2413,7 @@
 </script>
 
 <!-- Polar Chart script -->
-<script>
+<!--<script>
 
     var ctx = document.getElementById("polarChart").getContext("2d");
 
@@ -2089,9 +2598,366 @@
         }
     }
 
+</script>-->
+
+
+<!-- Scatter Plots script -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    $(document).ready(function() {
+        var myChart;
+
+        var metric_1 = {{avg_views | safe}};
+        var metric_2 = {{avg_answers | safe}};
+        var metric_1_name = "Avg Views";
+        var metric_2_name = "Avg Answers";
+        var thres_x = 0.1;
+        var thres_y = 0;
+
+        var labels = [];
+        var colors = []
+
+        function updateChart(flag) {
+            if (flag) {
+                labels = [];
+                colors = [];    
+            }
+            thres_x = parseFloat($('#thresX').val());
+            thres_y = parseFloat($('#thresY').val());
+            var topicCounter;
+            for (var i = 0; i < metric_1.length; i++) {
+                topicCounter = i-1;
+                labels.push("Topic " + topicCounter);
+                if (metric_1[i] <= thres_x) {
+                  if (metric_2[i] <= thres_y) {
+                    colors.push("red");
+                  } else {
+                    colors.push("blue");
+                  }
+                } else {
+                  if (metric_2[i] <= thres_y) {
+                    colors.push("grey");
+                  } else {
+                    colors.push("green");
+                  }
+                }
+              }
+            // Update chart dataset with new data points and colors
+            myChart.data.datasets[0].backgroundColor = colors;
+            
+            // Update the chart
+            myChart.update();
+        }
+
+        $("#metric1").change(function () {
+            metricHTML1 = document.getElementById('metric1');
+            metricToLoad1 = metricHTML1.value;
+            metricText1 = metricHTML1.options[metricHTML1.selectedIndex].text;
+            metricHTML2 = document.getElementById('metric2');
+            metricToLoad2 = metricHTML2.value;
+            metricText2 = metricHTML2.options[metricHTML2.selectedIndex].text;
+
+            if(metricToLoad1 === "avgViews") {
+                metric_1 = {{avg_views | safe}};
+            } else if(metricToLoad1 === "avgScore") {
+                metric_1 = {{avg_score | safe}};
+            } else if(metricToLoad1 === "avgAnswers") {
+                metric_1 = {{avg_answers | safe}};
+            } else if(metricToLoad1 === "avgHoursToFirstAnswer") {
+                metric_1 = {{avg_hours_to_first_answer | safe}};
+            } else if(metricToLoad1 === "pd") {
+                metric_1 = {{pd | safe}};
+            } else if(metricToLoad1 === "topicLengthEarly") {
+                metric_1 = {{topic_length_early | safe}};
+            } else if(metricToLoad1 === "topicLengthLate") {
+                metric_1 = {{topic_length_late| safe}};
+            } else if(metricToLoad1 === "shareEarly") {
+                metric_1 = {{share_early | safe}};
+            } else if(metricToLoad1 === "shareLate") {
+                metric_1 = {{share_late | safe}};
+            } else if(metricToLoad1 === "selfGrown") {
+                metric_1 = {{self_grown | safe}};
+            } else if(metricToLoad1 === "allGrowth") {
+                metric_1 = {{all_growth | safe}};
+            }
+
+            myChart.destroy();
+
+            var ctx = document.getElementById('topicPlot1').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: metricText1 + ' vs ' + metricText2,
+                        data: metric_1.map((value, index) => ({ x: value, y: metric_2[index], text: "Topic " + (index-1) })),
+                        backgroundColor: colors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: metricText1
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: metricText2
+                            }
+                        }
+                    },
+                    animation: {
+                        onComplete: function() {
+                            var chart = this;
+                            var ctx = chart.ctx;
+        
+                            //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+        
+                            chart.data.datasets.forEach(function(dataset, i) {
+                                var meta = chart.getDatasetMeta(i);
+                                if (!meta.hidden) {
+                                    meta.data.forEach(function(element, index) {
+                                        // Draw text label on top of each point
+                                        var data = dataset.data[index];
+                                        ctx.fillText(data.text, element.x, element.y - 10);
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+            updateChart(true);
+        });
+
+        $("#metric2").change(function () {
+            metricHTML1 = document.getElementById('metric1');
+            metricToLoad1 = metricHTML1.value;
+            metricText1 = metricHTML1.options[metricHTML1.selectedIndex].text;
+            metricHTML2 = document.getElementById('metric2');
+            metricToLoad2 = metricHTML2.value;
+            metricText2 = metricHTML2.options[metricHTML2.selectedIndex].text;
+
+            if(metricToLoad2 === "allGrowth") {
+                metric_2 = {{all_growth | safe}};
+            } else if(metricToLoad2 === "avgScore") {
+                metric_2 = {{avg_score | safe}};
+            } else if(metricToLoad2 === "avgAnswers") {
+                metric_2 = {{avg_answers | safe}};
+            } else if(metricToLoad2 === "avgHoursToFirstAnswer") {
+                metric_2 = {{avg_hours_to_first_answer | safe}};
+            } else if(metricToLoad2 === "pd") {
+                metric_2 = {{pd | safe}};
+            } else if(metricToLoad2 === "topicLengthEarly") {
+                metric_2 = {{topic_length_early | safe}};
+            } else if(metricToLoad2 === "topicLengthLate") {
+                metric_2 = {{topic_length_late| safe}};
+            } else if(metricToLoad2 === "shareEarly") {
+                metric_2 = {{share_early | safe}};
+            } else if(metricToLoad2 === "shareLate") {
+                metric_2 = {{share_late | safe}};
+            } else if(metricToLoad2 === "selfGrown") {
+                metric_2 = {{self_grown | safe}};
+            } else if(metricToLoad1 === "avgViews") {
+                metric_2 = {{avg_views | safe}};
+            }
+
+            myChart.destroy();
+
+            var ctx = document.getElementById('topicPlot1').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: metricText1 + ' vs ' + metricText2,
+                        data: metric_1.map((value, index) => ({ x: value, y: metric_2[index], text: "Topic " + (index-1) })),
+                        backgroundColor: colors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: metricText1
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: metricText2
+                            }
+                        }
+                    },
+                    animation: {
+                        onComplete: function() {
+                            var chart = this;
+                            var ctx = chart.ctx;
+        
+                            //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+        
+                            chart.data.datasets.forEach(function(dataset, i) {
+                                var meta = chart.getDatasetMeta(i);
+                                if (!meta.hidden) {
+                                    meta.data.forEach(function(element, index) {
+                                        // Draw text label on top of each point
+                                        var data = dataset.data[index];
+                                        ctx.fillText(data.text, element.x, element.y - 10);
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+            updateChart(true);
+        });
+
+        var ctx = document.getElementById('topicPlot1').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: metric_1_name + ' vs ' + metric_2_name,
+                    data: metric_1.map((value, index) => ({ x: value, y: metric_2[index], text: "Topic " + (index-1) })),
+                    backgroundColor: colors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: metric_1_name
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        grace: '5%',
+                        title: {
+                            display: true,
+                            text: metric_2_name
+                        }
+                    }
+                },
+                animation: {
+                    onComplete: function() {
+                        var chart = this;
+                        var ctx = chart.ctx;
+    
+                        //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+    
+                        chart.data.datasets.forEach(function(dataset, i) {
+                            var meta = chart.getDatasetMeta(i);
+                            if (!meta.hidden) {
+                                meta.data.forEach(function(element, index) {
+                                    // Draw text label on top of each point
+                                    var data = dataset.data[index];
+                                    ctx.fillText(data.text, element.x, element.y - 10);
+                                });
+                            }
+                        });
+                    }
+                }
+            }
+        });
+        
+        // Call updateChart to initialize the chart with default threshold values
+        updateChart(false);
+        
+        // Add event listeners to update the chart when threshold values change
+        $('#thresX, #thresY').on('input', updateChart);
+    });
 </script>
 
+<!-- <script>
+    var metric_1 = {{share_late | safe}};
+    var metric_2 = {{all_growth | safe}};
+    var metric_1_name = "Share Late";
+    var metric_2_name = "All Growth";
+    var thres_x = 0.1;
+    var thres_y = 0;
 
+    var labels = [];
+    var colors = [];
+
+    for (var i = 0; i < metric_1.length; i++) {
+      labels.push("Topic " + i);
+      if (metric_1[i] <= thres_x) {
+        if (metric_2[i] <= thres_y) {
+          colors.push("red");
+        } else {
+          colors.push("blue");
+        }
+      } else {
+        if (metric_2[i] <= thres_y) {
+          colors.push("grey");
+        } else {
+          colors.push("green");
+        }
+      }
+    }
+
+    var ctx = document.getElementById("topicPlot1").getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'scatter',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: metric_1_name + ' vs ' + metric_2_name,
+          data: metric_1.map((value, index) => ({ x: value, y: metric_2[index] })),
+          backgroundColor: colors,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            type: 'linear',
+            position: 'bottom',
+            title: {
+              display: true,
+              text: metric_1_name
+            }
+          },
+          y: {
+            type: 'linear',
+            position: 'left',
+            title: {
+              display: true,
+              text: metric_2_name
+            }
+          }
+        }
+      }
+    });
+  </script> -->
 
 <!-- Chord Diagram -->
 <script>
@@ -2419,7 +3285,7 @@ function fade(opacity) {
 });
 
 </script>
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<!--<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script>
     var allGroups = {
         x: {{times_data_list | safe}},
@@ -2499,7 +3365,7 @@ function fade(opacity) {
     };
 
     Plotly.newPlot('survivalCurve', survivalData, layout, config); 
-</script>
+</script>-->
 
 <script>
     document.getElementById('datepicker').onclick = function() {
@@ -2511,6 +3377,36 @@ function fade(opacity) {
             {"dateTo"   : dateTo  }
         ];
         window.location.href = './get_dates?dateFrom=' + dateFrom + '&dateTo=' + dateTo + '&inclClosed=' + closed;
+    };
+</script>
+
+<script>
+    document.getElementById('topicSearch').onclick = function() {
+        var dateFrom = document.getElementById('dateFrom').value;
+        var dateTo = document.getElementById('dateTo').value;
+        var closed = document.getElementById('includeClosedQuestionsCheckbox').checked ? 1 : 0;
+        var searchTerms = document.getElementById('searchTerms').value;
+        var server_data = [
+            {"dateFrom" : dateFrom},
+            {"dateTo"   : dateTo  },
+            {"searchTerms" : searchTerms}
+        ];
+        var url = './get_dates?dateFrom=' + dateFrom + '&dateTo=' + dateTo + '&inclClosed=' + closed + '&searchTerms=' + searchTerms;
+        window.location.href = url;
+    };
+</script>
+
+<script>
+    document.getElementById('pairWiseTopicComparisonsSearch').onclick = function() {
+        var dateFrom = document.getElementById('dateFrom').value;
+        var dateTo = document.getElementById('dateTo').value;
+        var closed = document.getElementById('includeClosedQuestionsCheckbox').checked ? 1 : 0;
+        var topicNo1 = document.getElementById('topicNo1').value;
+        var topicNo2 = document.getElementById('topicNo2').value;
+        var metric = document.getElementById('metric').value;
+        
+        var url = './get_dates?dateFrom=' + dateFrom + '&dateTo=' + dateTo + '&inclClosed=' + closed + '&topicNo1=' + topicNo1 + '&topicNo2=' + topicNo2 + '&metric=' + metric;
+        window.location.href = url;
     };
 </script>
 
@@ -2528,7 +3424,7 @@ function fade(opacity) {
 </script>
 
 <script>
-    var ctx1 = document.getElementById("commentsDistributionChart").getContext("2d");
+    /*var ctx1 = document.getElementById("commentsDistributionChart").getContext("2d");
 
     Chart.defaults.scale.ticks.beginAtZero = true;
     
@@ -2556,7 +3452,7 @@ function fade(opacity) {
                 responsive: false
             }
         }
-    });
+    });*/
 
     var ctx2 = document.getElementById("answersDistributionChart").getContext("2d");
 
@@ -2655,6 +3551,92 @@ function fade(opacity) {
         }
     });
 
+</script>
+
+
+<script>
+    // Function to get URL parameter by name
+    function getParameterByName(name) {
+        const searchParams = new URLSearchParams(window.location.search);
+        return searchParams.get(name);
+    }
+
+    // Get the input element
+    var topicNo1Input = document.getElementById("topicNo1");
+
+    // Get the value of 'topic' parameter from the URL
+    var topicFromURL = getParameterByName('topicNo1');
+
+    // If 'topic' parameter is found in the URL and is within the specified range, set the value of the input field
+    if (topicFromURL !== null && !isNaN(topicFromURL)) {
+        if (topicFromURL >= parseInt(topicNo1Input.min) && topicFromURL <= parseInt(topicNo1Input.max)) {
+            topicNo1Input.value = topicFromURL;
+        }
+    }
+
+    // Add event listener for input change
+    topicNo1Input.addEventListener("input", function() {
+        var inputValue = parseInt(topicNo1Input.value); // Parse the input value to integer
+
+        // Check if input value is less than the minimum
+        if (inputValue < parseInt(topicNo1Input.min)) {
+            topicNo1Input.value = topicNo1Input.min; // Set input value to minimum
+        }
+
+        // Check if input value is greater than the maximum
+        if (inputValue > parseInt(topicNo1Input.max)) {
+            topicNo1Input.value = topicNo1Input.max; // Set input value to maximum
+        }
+    });
+
+    var topicNo2Input = document.getElementById("topicNo2");
+
+    // Get the value of 'topic' parameter from the URL
+    var topicFromURL = getParameterByName('topicNo2');
+
+    // If 'topic' parameter is found in the URL and is within the specified range, set the value of the input field
+    if (topicFromURL !== null && !isNaN(topicFromURL)) {
+        if (topicFromURL >= parseInt(topicNo2Input.min) && topicFromURL <= parseInt(topicNo2Input.max)) {
+            topicNo2Input.value = topicFromURL;
+        }
+    }
+
+    // Add event listener for input change
+    topicNo2Input.addEventListener("input", function() {
+        var inputValue = parseInt(topicNo2Input.value); // Parse the input value to integer
+
+        // Check if input value is less than the minimum
+        if (inputValue < parseInt(topicNo2Input.min)) {
+            topicNo2Input.value = topicNo2Input.min; // Set input value to minimum
+        }
+
+        // Check if input value is greater than the maximum
+        if (inputValue > parseInt(topicNo2Input.max)) {
+            topicNo2Input.value = topicNo2Input.max; // Set input value to maximum
+        }
+    });
+
+    var metricInput = document.getElementById("metric");
+
+    // Get the value of 'metric' parameter from the URL
+    var metricFromURL = getParameterByName('metric');
+
+    // If 'metric' parameter is found in the URL and is within the specified range, set the value of the input field
+    if (metricFromURL !== null ) {
+        metricInput.value = metricFromURL;
+    }
+</script>
+
+<script>
+    $('#toggleSticky').change(function() {
+        var stickyCard = document.getElementById("stickyCard");
+        if (this.checked) {
+            stickyCard.classList.add("sticky-top-2");
+        } else {
+            stickyCard.classList.remove("sticky-top-2");
+        }
+    });
+    
 </script>
 
 

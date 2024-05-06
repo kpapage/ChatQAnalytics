@@ -5,12 +5,11 @@ from bs4 import BeautifulSoup
 from geopy.geocoders import Nominatim
 from itertools import combinations
 import pymongo
+import requests
+from geopy.exc import GeocoderServiceError
 
 def format_timestamp(timestamp):
     return datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%SZ')
-
-import requests
-import time
 
 def get_location_coordinates(location):
     geolocator = Nominatim(user_agent="stackoverflow_scraper")
@@ -33,6 +32,8 @@ def get_location_coordinates(location):
             print(f"Retrying in {retry_delay} seconds...")
             time.sleep(retry_delay)
             retry_delay *= 2  # exponential backoff
+        except GeocoderServiceError as e:
+            return None, None
     
     # If all retries fail, return None for coordinates
     print(f"Failed to fetch coordinates for location '{location}' after {max_retries} retries.")
@@ -67,17 +68,27 @@ def save_to_mongodb(data):
             collection.insert_one(item)
 
 
-def get_questions_by_tag(tags):
-    # API_KEY = '*********'
-    SITE = StackAPI('stackoverflow') # key = API_KEY
+def get_questions_by_tag(search_string, from_date, to_date):
+    API_KEY = 'iOF4agq)gkCRjlkvFewAjA(('
+    SITE = StackAPI('stackoverflow', key=API_KEY)
     question_data_list = []
     
-    for tag in tags:
-        print('tag: '+tag)
-        questions = SITE.fetch('questions', tagged=tag, filter='withbody')
-        i = 1
-        number_of_questions = str(len(questions['items']))
-        for question in questions['items']:
+    # for tag in tags:
+    #     print('tag: '+tag)
+    page = 1  # Start with the first page
+    
+    while True:
+        print('Page:', page)
+        questions = SITE.fetch('search', intitle=search_string, filter='withbody', page=page)
+        
+        # Check if there are questions on the current page
+        if 'items' not in questions or len(questions['items']) == 0:
+            # print('No more questions available for tag', tag)
+            print('No more questions available for search string', search_string)
+            break
+        
+        number_of_questions = len(questions['items'])
+        for i, question in enumerate(questions['items'], start=1):
             question_data = {}
             question_data['timestamps'] = format_timestamp(question['creation_date'])
             
@@ -106,7 +117,7 @@ def get_questions_by_tag(tags):
             question_data['views'] = question['view_count']
             question_data['question_id'] = f"question-summary-{question['question_id']}"
             
-            print('Question: ' + str(i) + '/' + number_of_questions)
+            print('Question:', i, '/', number_of_questions)
             
             # Extracting text from HTML body
             soup = BeautifulSoup(question.get('body', ''), 'html.parser')
@@ -119,37 +130,41 @@ def get_questions_by_tag(tags):
             question_data['answers'] = question['answer_count']
             question_data['closed'] = 1 if 'closed_date' in question else 0
             question_data['deleted'] = 1 if 'deleted_date' in question else 0
-            question_data['first_answer'] = None
+            
+            # Check if there are answers before fetching the first one
             if question['answer_count'] > 0:
-                first_answer = SITE.fetch('questions/{ids}/answers', ids=[question['question_id']], filter='withbody')['items'][0]
-                question_data['first_answer'] = format_timestamp(first_answer.get('creation_date'))
+                answers = SITE.fetch('questions/{ids}/answers', ids=[question['question_id']], filter='withbody')['items']
+                if answers:
+                    first_answer = answers[0]
+                    question_data['first_answer'] = format_timestamp(first_answer.get('creation_date'))
+                else:
+                    question_data['first_answer'] = "No answers"
             else:
                 question_data['first_answer'] = "No answers"
             
             question_data['tag_combinations'] = generate_tag_combinations(question['tags'])
             
             question_data_list.append(question_data)
-            
-            # Introduce a delay of 1 second between API requests to avoid throttle violation
-            time.sleep(0.3)
-            i+=1
+        
+        # Move to the next page
+        page += 1
+        
+        # Introduce a delay between API requests to avoid throttling
+        time.sleep(0.3)
     
     return question_data_list
 
-
-tags = [
-    'gpt-2', 
-    'gpt-3', 
-    'gpt-3.5', 
-    'gpt-4', 
-    'gpt4all', 
-    'chatgpt-api', 
-    'openai-api', 
-    'nlp', 
-    'chatbot', 
-    'langchain', 
-    'huggingface-transformers',
-    'large-language-model',
-] 
-questions_data = get_questions_by_tag(tags)
+to_date = datetime.datetime(2022, 12, 1)
+from_date = datetime.datetime(2023, 5, 1)
+# tags = [
+#     'gpt-2', 
+#     'gpt-3', 
+#     'gpt-3.5', 
+#     'gpt-4', 
+#     'chat-gpt-4', 
+#     'chatgpt-api', 
+#     'openai-api'
+# ] 
+search_string = 'chatgpt'
+questions_data = get_questions_by_tag(search_string,from_date, to_date)
 save_to_mongodb(questions_data)
