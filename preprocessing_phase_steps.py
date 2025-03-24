@@ -271,7 +271,7 @@ def store_random_forest_classifier(new_docs):
         'min_samples_split': [2, 5, 10],
         'min_samples_leaf': [1, 2, 4],
         'bootstrap': [True, False],
-        'class_weight': ['balanced', 'balanced_subsample', {0: 1, 1: 1.7235}]
+        'class_weight': ['balanced', 'balanced_subsample']
     }
     #'''
 
