@@ -189,9 +189,9 @@ def pairwise_topic_comparisons(topic_no_1,topic_no_2,metric,earliest_date,latest
     res_L=mannwhitneyu(topic_assignemnts_1,topic_assignemnts_2,alternative="less")
     res_two=mannwhitneyu(topic_assignemnts_1,topic_assignemnts_2,alternative="two-sided")
 
-    test_list=[f"Topic {topic_no_1} greater than {topic_no_2}",f"Topic {topic_no_2} greater than {topic_no_1}","There is difference between the two topics"]
-    pvalue_list=[res_G.pvalue,res_L.pvalue,res_two.pvalue]
-    statistic_list=[res_G.statistic,res_L.statistic,res_two.statistic]
+    test_list=[f"Topic {topic_no_1} greater than {topic_no_2}",f"Topic {topic_no_2} greater than {topic_no_1}"]
+    pvalue_list=[res_G.pvalue,res_L.pvalue]
+    statistic_list=[res_G.statistic,res_L.statistic]
 
     return({"Alternative Hypothesis":test_list,"P-value":pvalue_list,"Statistic":statistic_list})
 

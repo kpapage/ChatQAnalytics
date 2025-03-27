@@ -7,6 +7,11 @@ from itertools import combinations
 import pymongo
 import requests
 from geopy.exc import GeocoderServiceError
+from dotenv import load_dotenv
+import os
+
+def configure():
+    load_dotenv()
 
 def format_timestamp(timestamp):
     return datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%SZ')
@@ -69,8 +74,7 @@ def save_to_mongodb(data):
 
 
 def get_questions_by_tag(search_string, from_date, to_date):
-    API_KEY = 'iOF4agq)gkCRjlkvFewAjA(('
-    SITE = StackAPI('stackoverflow', key=API_KEY)
+    SITE = StackAPI('stackoverflow', key=os.getenv('API_KEY'))
     question_data_list = []
     
     # for tag in tags:
@@ -165,6 +169,7 @@ from_date = datetime.datetime(2023, 5, 1)
 #     'chatgpt-api', 
 #     'openai-api'
 # ] 
+configure()
 search_string = 'chatgpt'
 questions_data = get_questions_by_tag(search_string,from_date, to_date)
 save_to_mongodb(questions_data)
