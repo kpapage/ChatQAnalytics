@@ -699,6 +699,7 @@
                                         <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
                                     </div>
                                 </h6>
+                                <button id="exportPredictNewDocs" type="button" class="btn btn-primary">Export</button>
                             </div>
                             <div class="card-body">
                                 <form class="form-inline my-2 my-lg-0">
@@ -736,6 +737,7 @@
                                         <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
                                     </div>
                                 </h6>
+                                <button id="exportTopicPopularityDifficulty" type="button" class="btn btn-primary">Export</button>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -781,6 +783,7 @@
                                         <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
                                     </div>
                                 </h6>
+                                <button id="exportTopicGrowth" type="button" class="btn btn-primary">Export</button>
                             </div>
                             <div class="card-body">
                                 <div class="growthTopic">
@@ -874,6 +877,7 @@
                                         <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
                                     </div>
                                 </h6>
+                                <button id="exportPairwiseTopicComparisons" type="button" class="btn btn-primary">Export</button>
                             </div>
                             <div class="card-body">
                                 <div class="pairWiseTopicComparisons">
@@ -3637,6 +3641,29 @@ function fade(opacity) {
     
 </script>
 
+<script>
+    document.getElementById('exportTopicGrowth').addEventListener('click', function() {
+        window.location.href = '/export-growth-topic';
+    });
+</script>
+
+<script>
+    document.getElementById('exportPairwiseTopicComparisons').addEventListener('click', function() {
+        window.location.href = '/export-pairwise-topic-conmparisons';
+    });
+</script>
+
+<script>
+    document.getElementById('exportPredictNewDocs').addEventListener('click', function() {
+        window.location.href = '/export-predict-new-docs';
+    });
+</script>
+
+<script>
+    document.getElementById('exportTopicPopularityDifficulty').addEventListener('click', function() {
+        window.location.href = '/export-topic-popularity-difficulty';
+    });
+</script>
 
 </div>
 </body>

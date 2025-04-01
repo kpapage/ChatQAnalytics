@@ -1,6 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
-
-from flask import Flask
+from flask import Flask, Blueprint, render_template, request, jsonify, redirect, url_for, send_file
 
 from pymongo import MongoClient
 
@@ -9,6 +7,8 @@ from itertools import islice, combinations
 from collections import Counter
 
 import re
+
+import io
 
 from datetime import datetime, timezone, date
 
@@ -46,6 +46,78 @@ documents = pd.read_csv("static/models/LLM-db.questions.csv")
 model = BERTopic.load("static/models/Bertopic_model_reduced_30_topics")
 sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
 model_class = joblib.load('static/models/random_forest_model.joblib')
+
+res_dif_0_formatted = {}
+res_dif_1_formatted = {}
+res_growth_dict = {}
+ptc_dict = {}
+predict_class_new_docs_dict = {}
+
+@app.route("/export-topic-popularity-difficulty")
+def export_topic_popularity_difficulty():
+    df1 = pd.DataFrame(res_dif_0_formatted)
+    df2 = pd.DataFrame(res_dif_1_formatted) 
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, endine = 'xlswriter') as writer:
+        df1.to_excel(writer, sheet_name='Sheet1', index=False)
+        df2.to_excel(writer, sheet_name='Sheet2', index=False)
+        
+    output.seek(0)
+    
+    return send_file(
+        output,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        download_name='topic_popularity_difficulty.xlsx',
+        as_attachment=True
+    )   
+
+@app.route("/export-growth-topic")
+def export_growth_topic():
+    df = pd.DataFrame(res_growth_dict)
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, endine = 'xlswriter') as writer:
+        df.to_excel(writer, sheet_name='Sheet1', index=False)
+        
+    output.seek(0)
+    
+    return send_file(
+        output,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        download_name='growth_topic.xlsx',
+        as_attachment=True
+    )    
+
+@app.route("/export-pairwise-topic-conmparisons")
+def export_pairwise_topic_comparisons():    
+    df = pd.DataFrame(ptc_dict)
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, endine = 'xlswriter') as writer:
+        df.to_excel(writer, sheet_name='Sheet1', index=False)
+        
+    output.seek(0)
+    
+    return send_file(
+        output,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        download_name='pairwise_topic_comparisons.xlsx',
+        as_attachment=True
+    )    
+    
+@app.route("/export-predict-new-docs")
+def export_predict_new_docs():
+    df = pd.DataFrame(predict_class_new_docs_dict)
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, endine = 'xlswriter') as writer:
+        df.to_excel(writer, sheet_name='Sheet1', index=False)
+        
+    output.seek(0)
+    
+    return send_file(
+        output,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        download_name='predict_new_docs.xlsx',
+        as_attachment=True
+    )   
 
 ####Predict the topic and embedding of a list of texts (new_docs)
 ####In the tool use this function to predict the topic of one text
@@ -256,6 +328,17 @@ def index():
     tag_combo_frequencies = {}
     answered_questions = 0
     unanswered_questions = 0
+    
+    global res_dif_0_formatted
+    res_dif_0_formatted.clear()
+    global res_dif_1_formatted 
+    res_dif_1_formatted.clear()
+    global res_growth_dict 
+    res_growth_dict.clear()
+    global ptc_dict 
+    ptc_dict.clear()
+    global predict_class_new_docs_dict
+    predict_class_new_docs_dict.clear()
 
     fields_and_techs = {}
     for technology in technologies:
@@ -2725,7 +2808,8 @@ def fetch():
     earliest_date = date_from + '00:00:00Z'
     latest_date = date_to + '00:00:00Z'
     search_terms = request.args.get('searchTerms')
-    predict_class_new_docs_dict={}
+    global predict_class_new_docs_dict
+    predict_class_new_docs_dict.clear()
     if search_terms != None:
         search_terms_list = search_terms.split("; ")
         
@@ -2746,12 +2830,13 @@ def fetch():
     avg_hours_to_first_answer=res_pop_dif[1]["Avg_hrs_to_first_answer"].tolist()
     pd=res_pop_dif[1]["PD"].tolist()
     
-
-    res_dif_0_formatted = {}
+    global res_dif_0_formatted
+    res_dif_0_formatted.clear()
     for idx, row in res_pop_dif[0].iterrows():
         res_dif_0_formatted[idx] = row.values.tolist()
         
-    res_dif_1_formatted = {}
+    global res_dif_1_formatted
+    res_dif_1_formatted.clear()
     for idx, row in res_pop_dif[1].iterrows():
         res_dif_1_formatted[idx] = row.values.tolist()
         
@@ -2763,7 +2848,8 @@ def fetch():
     share_late = res_growth['share_late']
     self_grown = res_growth['self_grown']
     all_growth = res_growth['all_growth']
-    res_growth_dict = {}
+    global res_growth_dict
+    res_growth_dict.clear()
 
     for key in res_growth:
         for i, value in enumerate(res_growth[key]):
@@ -2775,7 +2861,8 @@ def fetch():
     topic_no_2 = request.args.get('topicNo2')
     metric_option = request.args.get('metric')
     print(metric_option)
-    ptc_dict = {}
+    global ptc_dict
+    ptc_dict.clear()
     if (topic_no_1 != None and topic_no_2 != None and metric_option != None) :
         if metric_option == 'views':
             metric=documents['views']
