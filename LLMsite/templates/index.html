@@ -717,16 +717,6 @@
                                 <br>
                                 <div class="predictClassNewDocs">
                                     <table class="table table-striped" id="predictClassNewDocs" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <th width="10%" scope="col">#</th>
-                                                <th width="40%" scope="col">Search Term</th>
-                                                <th width="12.5%" scope="col">Class</th>
-                                                <th width="12.5%" scope="col">ChatGPT </th>
-                                                <th width="12.5%" scope="col">Non ChatGPT </th>
-                                                <th width="12.5%" scope="col">Topic </th>
-                                            </tr>
-                                        </thead>
                                     </table>
                                 </div>
                             </div>
@@ -1192,10 +1182,47 @@
         count++;
     }
 </script>
-<!-- <script>
+<script>
     'use strict';
 
     var tbl = document.getElementById('predictClassNewDocs');
+    
+    var tblHead = document.createElement("thead");
+
+    var hrow = document.createElement("tr");
+
+    var hcell1 = document.createElement("th");
+    var hcellText1 = document.createTextNode("#");
+    hcell1.appendChild(hcellText1);
+    hrow.appendChild(hcell1);
+
+    var hcell2 = document.createElement("th");
+    var hcellText2 = document.createTextNode("Search Term");
+    hcell2.appendChild(hcellText2);
+    hrow.appendChild(hcell2);
+
+    var hcell3 = document.createElement("th");
+    var hcellText3 = document.createTextNode("Class");
+    hcell3.appendChild(hcellText3);
+    hrow.appendChild(hcell3);
+
+    var hcell4 = document.createElement("th");
+    var hcellText4 = document.createTextNode("ChatGPT");
+    hcell4.appendChild(hcellText4);
+    hrow.appendChild(hcell4);
+
+    var hcell5 = document.createElement("th");
+    var hcellText5 = document.createTextNode("Non ChatGPT");
+    hcell5.appendChild(hcellText5);
+    hrow.appendChild(hcell5);
+
+    var hcell6 = document.createElement("th");
+    var hcellText6 = document.createTextNode("Topic");
+    hcell6.appendChild(hcellText6);
+    hrow.appendChild(hcell6);
+
+    tblHead.appendChild(hrow);
+    tbl.appendChild(tblHead);
     var tblBody = document.createElement("tbody");
 
     var predictClassNewDocs = {{ predict_class_new_docs_dict | safe }};
@@ -1254,11 +1281,11 @@
         }
     }
 
-</script> -->
+</script> 
 
 <script>
     function predictUpdate() {
-        $("#predictSelect").empty();
+        $("#predictClassNewDocs").empty();
         var select = document.getElementById('predictSelect').value;
         var predictClassNewDocs;
         if(select === "Title") {
@@ -1267,6 +1294,43 @@
             predictClassNewDocs = {{ predict_class_new_docs_title_body_dict | safe }};
         }
         var tbl = document.getElementById('predictClassNewDocs');
+
+        var tblHead = document.createElement("thead");
+
+        var hrow = document.createElement("tr");
+
+        var hcell1 = document.createElement("th");
+        var hcellText1 = document.createTextNode("#");
+        hcell1.appendChild(hcellText1);
+        hrow.appendChild(hcell1);
+
+        var hcell2 = document.createElement("th");
+        var hcellText2 = document.createTextNode("Search Term");
+        hcell2.appendChild(hcellText2);
+        hrow.appendChild(hcell2);
+
+        var hcell3 = document.createElement("th");
+        var hcellText3 = document.createTextNode("Class");
+        hcell3.appendChild(hcellText3);
+        hrow.appendChild(hcell3);
+
+        var hcell4 = document.createElement("th");
+        var hcellText4 = document.createTextNode("ChatGPT");
+        hcell4.appendChild(hcellText4);
+        hrow.appendChild(hcell4);
+
+        var hcell5 = document.createElement("th");
+        var hcellText5 = document.createTextNode("Non ChatGPT");
+        hcell5.appendChild(hcellText5);
+        hrow.appendChild(hcell5);
+
+        var hcell6 = document.createElement("th");
+        var hcellText6 = document.createTextNode("Topic");
+        hcell6.appendChild(hcellText6);
+        hrow.appendChild(hcell6);
+
+        tblHead.appendChild(hrow);
+        tbl.appendChild(tblHead);
         var tblBody = document.createElement("tbody");
 
         var count = 1;
