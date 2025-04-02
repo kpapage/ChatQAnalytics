@@ -252,7 +252,7 @@ def store_random_forest_classifier(new_docs):
     from sklearn.ensemble import RandomForestClassifier
 
     #Simplified parameters
-    """
+    #"""
     param_grid={
         'n_estimators':[3],
         'max_depth':[10],
@@ -261,10 +261,10 @@ def store_random_forest_classifier(new_docs):
         'bootstrap': [True, False],
         'class_weight': ['balanced']
     }
-    """
+    #"""
 
     #Default parameters
-    #'''
+    '''
     param_grid = {
         'n_estimators': [100, 200, 300, 400, 500],
         'max_depth': [None, 10, 20, 30, 40, 50],
@@ -273,7 +273,7 @@ def store_random_forest_classifier(new_docs):
         'bootstrap': [True, False],
         'class_weight': ['balanced', 'balanced_subsample']
     }
-    #'''
+    '''
 
 
     reg = RandomForestClassifier(random_state=123)
