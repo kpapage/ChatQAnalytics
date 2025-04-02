@@ -699,6 +699,12 @@
                                         <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
                                     </div>
                                 </h6>
+                                <div>
+                                    <select class="custom-select" id="predictSelect" onchange="predictUpdate()">
+                                        <option value="Title">Title</option>
+                                        <option value="TitleBody">Title+Body</option>
+                                    </select>
+                                </div>
                                 <button id="exportPredictNewDocs" type="button" class="btn btn-primary">Export</button>
                             </div>
                             <div class="card-body">
@@ -1186,7 +1192,7 @@
         count++;
     }
 </script>
-<script>
+<!-- <script>
     'use strict';
 
     var tbl = document.getElementById('predictClassNewDocs');
@@ -1247,6 +1253,78 @@
             count++;
         }
     }
+
+</script> -->
+
+<script>
+    function predictUpdate() {
+        $("#predictSelect").empty();
+        var select = document.getElementById('predictSelect').value;
+        var predictClassNewDocs;
+        if(select === "Title") {
+            predictClassNewDocs = {{ predict_class_new_docs_dict | safe }};
+        } else {
+            predictClassNewDocs = {{ predict_class_new_docs_title_body_dict | safe }};
+        }
+        var tbl = document.getElementById('predictClassNewDocs');
+        var tblBody = document.createElement("tbody");
+
+        var count = 1;
+
+        // Check if there are no data
+        if (Object.keys(predictClassNewDocs).length === 0) {
+            var noDataRow = document.createElement("tr");
+            var noDataCell = document.createElement("td");
+            noDataCell.setAttribute("colspan", "6"); // Span across all columns
+            var noDataText = document.createTextNode("No data available");
+            noDataCell.appendChild(noDataText);
+            noDataRow.appendChild(noDataCell);
+            tblBody.appendChild(noDataRow);
+            tbl.appendChild(tblBody);
+        } else {
+            // Loop through the data and create rows
+            for (const [key, value] of Object.entries(predictClassNewDocs)) {
+                var row = document.createElement("tr");
+
+                // Create and append cells for each column
+                var cell1 = document.createElement("th");
+                var cellText1 = document.createTextNode(count);
+                cell1.appendChild(cellText1);
+                row.appendChild(cell1);
+
+                var cell2 = document.createElement("th");
+                var cellText2 = document.createTextNode(key);
+                cell2.appendChild(cellText2);
+                row.appendChild(cell2);
+
+                var cell3 = document.createElement("th");
+                var cellText3 = document.createTextNode(value[0]);
+                cell3.appendChild(cellText3);
+                row.appendChild(cell3);
+
+                var cell4 = document.createElement("td");
+                var cellText4 = document.createTextNode(value[2].toFixed(2));
+                cell4.appendChild(cellText4);
+                row.appendChild(cell4);
+
+                var cell5 = document.createElement("td");
+                var cellText5 = document.createTextNode(value[1].toFixed(2));
+                cell5.appendChild(cellText5);
+                row.appendChild(cell5);
+
+                var cell6 = document.createElement("td");
+                var cellText6 = document.createTextNode(value[3]);
+                cell6.appendChild(cellText6);
+                row.appendChild(cell6);
+
+                tblBody.appendChild(row);
+                tbl.appendChild(tblBody);
+
+                count++;
+            }
+        }
+    }
+
 
 </script>
 

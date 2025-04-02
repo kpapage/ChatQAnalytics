@@ -23,12 +23,14 @@ documents = pd.read_csv("static/models/LLM-db.questions.csv")
 model = BERTopic.load("static/models/Bertopic_model_reduced_30_topics")
 sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
 model_class = joblib.load('static/models/random_forest_model.joblib')
+model_class_title_body = joblib.load('static/models/random_forest_model_title_body.joblib')
 
 res_dif_0_formatted = {}
 res_dif_1_formatted = {}
 res_growth_dict = {}
 ptc_dict = {}
 predict_class_new_docs_dict = {}
+predict_class_new_docs_title_body_dict={}
 
 @app.route("/export-topic-popularity-difficulty")
 def export_topic_popularity_difficulty():
@@ -109,11 +111,14 @@ def predict_topic_new_docs(new_docs):
 ####Predict the texts from a list of texts (new_docs) relevant to ChatGPT
 ####Returns the class of the texts, 1 for ChatGPT and 0 for non ChatGPT, and their probability being related to ChatGPT (second column) and to non ChatGPT (first column)
 ####In the tool use this function to predict the class and probability of one text
-def predict_class_new_docs(new_docs):
-
+def predict_class_new_docs(new_docs, titleModel):
+    if (titleModel):
+        predict_model = model_class
+    else:
+        predict_model = model_class_title_body
     new_embs = sentence_model.encode(new_docs, show_progress_bar=True)
-    new_docs_class = model_class.predict(new_embs)
-    new_docs_class_prob = model_class.predict_proba(new_embs)
+    new_docs_class = predict_model.predict(new_embs)
+    new_docs_class_prob = predict_model.predict_proba(new_embs)
     result_dict = {}
     for i, doc in enumerate(new_docs):
         result_dict[doc] = [new_docs_class[i], new_docs_class_prob[i][0], new_docs_class_prob[i][1]]
@@ -317,6 +322,8 @@ def index():
     ptc_dict.clear()
     global predict_class_new_docs_dict
     predict_class_new_docs_dict.clear()
+    global predict_class_new_docs_title_body_dict
+    predict_class_new_docs_title_body_dict.clear()
 
     fields_and_techs = {}
     for technology in technologies:
@@ -1538,7 +1545,7 @@ def index():
                             top_10_collaboration_tools_response_time_reverse=top_10_collaboration_tools_response_time_reverse,
                             top_10_dev_tools_response_time_reverse=top_10_dev_tools_response_time_reverse,
                             top_10_sorted_ids_and_response_time_reverse=top_10_sorted_ids_and_response_time_reverse,
-                            predict_class_new_docs_dict = {},res_dif_0_formatted = {}, res_dif_1_formatted = {}, res_growth_dict={}, ptc_dict = {}
+                            predict_class_new_docs_dict = {},predict_class_new_docs_title_body_dict = {},res_dif_0_formatted = {}, res_dif_1_formatted = {}, res_growth_dict={}, ptc_dict = {}
                            )
 @app.route('/get_bert')
 def get_map():
@@ -2788,10 +2795,13 @@ def fetch():
     search_terms = request.args.get('searchTerms')
     global predict_class_new_docs_dict
     predict_class_new_docs_dict.clear()
+    global predict_class_new_docs_title_body_dict
+    predict_class_new_docs_title_body_dict.clear()
     if search_terms != None:
         search_terms_list = search_terms.split("; ")
         
-        predict_class_new_docs_dict = predict_class_new_docs(search_terms_list)
+        predict_class_new_docs_dict = predict_class_new_docs(search_terms_list, True)
+        predict_class_new_docs_title_body_dict = predict_class_new_docs(search_terms_list, False)
         predict_topic_new_docs_dict = predict_topic_new_docs(search_terms_list)
                 
         predict_topic_new_docs_value_list = predict_topic_new_docs_dict['topic'][0]
@@ -2956,6 +2966,7 @@ def fetch():
                             top_10_dev_tools_response_time_reverse=top_10_dev_tools_response_time_reverse,
                             top_10_sorted_ids_and_response_time_reverse=top_10_sorted_ids_and_response_time_reverse,
                             predict_class_new_docs_dict = predict_class_new_docs_dict,
+                            predict_class_new_docs_title_body_dict= predict_class_new_docs_title_body_dict,
                             res_dif_0_formatted = res_dif_0_formatted, res_dif_1_formatted = res_dif_1_formatted,
                             res_growth_dict = res_growth_dict, share_late = share_late, all_growth = all_growth,
                             avg_score = avg_score, pd = pd, avg_views = avg_views, avg_answers = avg_answers, 
