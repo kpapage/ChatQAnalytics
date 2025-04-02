@@ -282,7 +282,7 @@ def store_random_forest_classifier(new_docs):
     auc_scorer = make_scorer(roc_auc_score, greater_is_better=True, needs_proba=True)
 
     grid_search = GridSearchCV(estimator=reg, param_grid=param_grid,
-                               cv=10, n_jobs=4, verbose=3, scoring=auc_scorer)  # precision or recall
+                               cv=10, n_jobs=1, verbose=3, scoring=auc_scorer)  # precision or recall
     # Fit the model to the training data
     grid_search.fit(pd.concat([pd.DataFrame(embeddings), pd.DataFrame(new_embs)], ignore_index=True), Y)
 
