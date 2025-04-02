@@ -62,11 +62,11 @@
 - This script trains a BERTopic model, Tag clustering visualizations and a Random Forest model using the titles of the questions. The models and visualizations are stored in the appropriate paths within the project. For the Random Forest model, we currently maintain a simple approach for training a Random Forest, while the finetuning parameters used in the experiements of the current work can be found in comments (lines 267-276).
 - For the models, File 'LLMsite/static/models/LLM-db.questions.csv' stores the positive samples and file 'LLMsite/static/models/Newest_records_SO.csv' stores the negative samples. The latter file may change as well to store different questions than the ones selected from the authors. To not alter the script, we advise that this file contain the title of the questions in a column described as 'Title'.
 - This script can be used at any time to alter the models and review the dashboard that functions based on their properties.
-- The simple approach to run the script is the followinwg: Navigate to the root directory of the repository and execute the following command to process the data:
+- Simple approach to run the script: Navigate to the root directory of the repository and execute the following command to process the data:
     ```bash
     python preprocessing_phase_steps.py
     ```
-- Wihtin the script, users may modify the parameters of the models to adapt to their needs, e.g. more/less topics, adjust finetuning parameters in Random Forest. In any case, the user can review the script to train one model at a time instead of replacing all models at once. 
+- Within the script, users may modify the parameters of the models to adapt to their needs, e.g. more/less topics, adjust finetuning parameters in Random Forest. In any case, the user can review the script to train one model at a time instead of replacing all models at once. 
 ### 8. View the Dashboard
 - With the data now processed, you can now start the Localhost again, and visit the ChatQAnalytics dashboard at `http://localhost:5000/` to browse the updated data for your search string.
 
