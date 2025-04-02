@@ -1,0 +1,7 @@
+stackapi
+datetime
+beautifulsoup4
+geopy
+pymongo
+requests
+python-dotenv

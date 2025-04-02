@@ -1,0 +1,13 @@
+flask
+pymongo
+numpy
+pandas
+joblib
+sentence-transformers
+matplotlib
+bertopic
+umap-learn
+scikit-learn
+scipy
+xlsxwriter
+numba==0.57.0

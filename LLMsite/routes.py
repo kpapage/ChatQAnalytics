@@ -1,44 +1,22 @@
 from flask import Flask, Blueprint, render_template, request, jsonify, redirect, url_for, send_file
-
 from pymongo import MongoClient
-
 from itertools import islice, combinations
-
 from collections import Counter
-
 import re
-
 import io
-
 from datetime import datetime, timezone, date
-
 import numpy as np
-
 from operator import itemgetter
-
 from statistics import median
-
-import numpy as np
-
 import pandas as pd
-
 import joblib
-
 from sentence_transformers import SentenceTransformer
-
 import matplotlib.pyplot as plt
-
-from sentence_transformers import SentenceTransformer
-
 from bertopic import BERTopic
-
 from umap import UMAP
-
-from datetime import datetime
-
 from sklearn.ensemble import RandomForestClassifier
-
 from scipy.stats import mannwhitneyu
+import xlsxwriter
 
 app = Flask(__name__)
 
@@ -58,7 +36,7 @@ def export_topic_popularity_difficulty():
     df1 = pd.DataFrame(res_dif_0_formatted)
     df2 = pd.DataFrame(res_dif_1_formatted) 
     output = io.BytesIO()
-    with pd.ExcelWriter(output, endine = 'xlswriter') as writer:
+    with pd.ExcelWriter(output, engine = 'xlswriter') as writer:
         df1.to_excel(writer, sheet_name='Sheet1', index=False)
         df2.to_excel(writer, sheet_name='Sheet2', index=False)
         
@@ -75,7 +53,7 @@ def export_topic_popularity_difficulty():
 def export_growth_topic():
     df = pd.DataFrame(res_growth_dict)
     output = io.BytesIO()
-    with pd.ExcelWriter(output, endine = 'xlswriter') as writer:
+    with pd.ExcelWriter(output, engine = 'xlswriter') as writer:
         df.to_excel(writer, sheet_name='Sheet1', index=False)
         
     output.seek(0)
@@ -91,7 +69,7 @@ def export_growth_topic():
 def export_pairwise_topic_comparisons():    
     df = pd.DataFrame(ptc_dict)
     output = io.BytesIO()
-    with pd.ExcelWriter(output, endine = 'xlswriter') as writer:
+    with pd.ExcelWriter(output, engine = 'xlswriter') as writer:
         df.to_excel(writer, sheet_name='Sheet1', index=False)
         
     output.seek(0)
@@ -107,7 +85,7 @@ def export_pairwise_topic_comparisons():
 def export_predict_new_docs():
     df = pd.DataFrame(predict_class_new_docs_dict)
     output = io.BytesIO()
-    with pd.ExcelWriter(output, endine = 'xlswriter') as writer:
+    with pd.ExcelWriter(output, engine = 'xlswriter') as writer:
         df.to_excel(writer, sheet_name='Sheet1', index=False)
         
     output.seek(0)
