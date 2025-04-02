@@ -16,7 +16,6 @@ from bertopic import BERTopic
 from umap import UMAP
 from sklearn.ensemble import RandomForestClassifier
 from scipy.stats import mannwhitneyu
-import xlsxwriter
 
 app = Flask(__name__)
 
@@ -36,7 +35,7 @@ def export_topic_popularity_difficulty():
     df1 = pd.DataFrame(res_dif_0_formatted)
     df2 = pd.DataFrame(res_dif_1_formatted) 
     output = io.BytesIO()
-    with pd.ExcelWriter(output, engine = 'xlswriter') as writer:
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
         df1.to_excel(writer, sheet_name='Sheet1', index=False)
         df2.to_excel(writer, sheet_name='Sheet2', index=False)
         
@@ -47,13 +46,13 @@ def export_topic_popularity_difficulty():
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         download_name='topic_popularity_difficulty.xlsx',
         as_attachment=True
-    )   
+    )
 
 @app.route("/export-growth-topic")
 def export_growth_topic():
     df = pd.DataFrame(res_growth_dict)
     output = io.BytesIO()
-    with pd.ExcelWriter(output, engine = 'xlswriter') as writer:
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, sheet_name='Sheet1', index=False)
         
     output.seek(0)
@@ -63,13 +62,13 @@ def export_growth_topic():
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         download_name='growth_topic.xlsx',
         as_attachment=True
-    )    
+    )
 
-@app.route("/export-pairwise-topic-conmparisons")
-def export_pairwise_topic_comparisons():    
+@app.route("/export-pairwise-topic-comparisons")
+def export_pairwise_topic_comparisons():
     df = pd.DataFrame(ptc_dict)
     output = io.BytesIO()
-    with pd.ExcelWriter(output, engine = 'xlswriter') as writer:
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, sheet_name='Sheet1', index=False)
         
     output.seek(0)
@@ -79,13 +78,13 @@ def export_pairwise_topic_comparisons():
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         download_name='pairwise_topic_comparisons.xlsx',
         as_attachment=True
-    )    
-    
+    )
+
 @app.route("/export-predict-new-docs")
 def export_predict_new_docs():
     df = pd.DataFrame(predict_class_new_docs_dict)
     output = io.BytesIO()
-    with pd.ExcelWriter(output, engine = 'xlswriter') as writer:
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, sheet_name='Sheet1', index=False)
         
     output.seek(0)
@@ -95,7 +94,8 @@ def export_predict_new_docs():
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         download_name='predict_new_docs.xlsx',
         as_attachment=True
-    )   
+    )
+ 
 
 ####Predict the topic and embedding of a list of texts (new_docs)
 ####In the tool use this function to predict the topic of one text

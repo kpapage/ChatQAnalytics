@@ -9,5 +9,5 @@ bertopic
 umap-learn
 scikit-learn
 scipy
-xlsxwriter
+openpyxl
 numba==0.57.0
