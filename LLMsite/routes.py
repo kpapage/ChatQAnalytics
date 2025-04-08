@@ -16,6 +16,7 @@ from bertopic import BERTopic
 from umap import UMAP
 from sklearn.ensemble import RandomForestClassifier
 from scipy.stats import mannwhitneyu
+import statistics
 
 app = Flask(__name__)
 
@@ -248,7 +249,7 @@ def pairwise_topic_comparisons(topic_no_1,topic_no_2,metric,earliest_date,latest
     pvalue_list=[res_G.pvalue,res_L.pvalue]
     statistic_list=[res_G.statistic,res_L.statistic]
 
-    return({"Alternative Hypothesis":test_list,"P-value":pvalue_list,"Statistic":statistic_list})
+    return({"Alternative Hypothesis":test_list,"P-value":pvalue_list,"Statistic":statistic_list,"Median 1":statistics.median(topic_assignemnts_1),"Median 2":statistics.median(topic_assignemnts_2)})
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
