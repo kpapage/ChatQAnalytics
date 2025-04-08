@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from bertopic import BERTopic
 from umap import UMAP
 from sklearn.ensemble import RandomForestClassifier
-from scipy.stats import mannwhitneyu
+from scipy.stats import mannwhitneyu, rankdata
 import statistics
 
 app = Flask(__name__)
@@ -245,11 +245,24 @@ def pairwise_topic_comparisons(topic_no_1,topic_no_2,metric,earliest_date,latest
     #res_L=mannwhitneyu(topic_assignemnts_1,topic_assignemnts_2,alternative="less")
     res_two=mannwhitneyu(topic_assignemnts_1,topic_assignemnts_2,alternative="two-sided")
 
+    # Calculate ranks
+    combined = topic_assignemnts_1 + topic_assignemnts_2
+    ranks = rankdata(combined)
+
+    # Split back into ranks for each group
+    n1 = len(topic_assignemnts_1)
+    ranks_1 = ranks[:n1]
+    ranks_2 = ranks[n1:]
+
+    median_rank_1 = float(np.median(ranks_1)) if len(ranks_1) > 0 else None
+    median_rank_2 = float(np.median(ranks_2)) if len(ranks_2) > 0 else None
+
     #test_list=[f"Topic {topic_no_1} greater than {topic_no_2}",f"Topic {topic_no_2} greater than {topic_no_1}"]
     #pvalue_list=[res_G.pvalue,res_L.pvalue]
     #statistic_list=[res_G.statistic,res_L.statistic]
 
-    return({"Alternative Hypothesis":f"There is a stististical difference between Topic {topic_no_1} and Topic {topic_no_2}","P-value":res_two.pvalue,"Statistic":res_two.statistic,"Median 1":statistics.median(topic_assignemnts_1),"Median 2":statistics.median(topic_assignemnts_2)})
+    return({"Alternative Hypothesis":f"There is a stististical difference between Topic {topic_no_1} and Topic {topic_no_2}","P-value":res_two.pvalue,"Statistic":res_two.statistic, "Median Rank 1": median_rank_1,"Median Rank 2": median_rank_2})
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
