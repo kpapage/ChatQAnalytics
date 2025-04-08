@@ -249,7 +249,7 @@ def pairwise_topic_comparisons(topic_no_1,topic_no_2,metric,earliest_date,latest
     #pvalue_list=[res_G.pvalue,res_L.pvalue]
     #statistic_list=[res_G.statistic,res_L.statistic]
 
-    return({"Alternative Hypothesis":f"Topic {topic_no_1} differs from {topic_no_2}","P-value":res_two.pvalue,"Statistic":res_two.statistic,"Median 1":statistics.median(topic_assignemnts_1),"Median 2":statistics.median(topic_assignemnts_2)})
+    return({"Alternative Hypothesis":f"Topic {topic_no_1} differs from Topic {topic_no_2}","P-value":res_two.pvalue,"Statistic":res_two.statistic,"Median 1":statistics.median(topic_assignemnts_1),"Median 2":statistics.median(topic_assignemnts_2)})
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
