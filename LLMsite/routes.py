@@ -256,12 +256,13 @@ def pairwise_topic_comparisons(topic_no_1,topic_no_2,metric,earliest_date,latest
 
     median_rank_1 = float(np.median(ranks_1)) if len(ranks_1) > 0 else None
     median_rank_2 = float(np.median(ranks_2)) if len(ranks_2) > 0 else None
-
+    mean_rank_1 = float(np.mean(ranks_1)) if len(ranks_1) > 0 else None
+    mean_rank_2 = float(np.mean(ranks_2)) if len(ranks_2) > 0 else None
     #test_list=[f"Topic {topic_no_1} greater than {topic_no_2}",f"Topic {topic_no_2} greater than {topic_no_1}"]
     #pvalue_list=[res_G.pvalue,res_L.pvalue]
     #statistic_list=[res_G.statistic,res_L.statistic]
 
-    return({"Alternative Hypothesis":f"There is a statistical difference between Topic {topic_no_1} and Topic {topic_no_2}","P-value":res_two.pvalue,"Statistic":res_two.statistic, "Median Rank 1": median_rank_1,"Median Rank 2": median_rank_2})
+    return({"Alternative Hypothesis":f"There is a statistical difference between Topic {topic_no_1} and Topic {topic_no_2}","P-value":res_two.pvalue,"Statistic":res_two.statistic, "Median Rank 1": median_rank_1,"Median Rank 2": median_rank_2, "Mean Rank 1": mean_rank_1,"Mean Rank 2": mean_rank_2})
 
 
 @app.route('/', methods=['GET', 'POST'])
