@@ -908,14 +908,35 @@
                                     <br>
                                     <div class="row">
                                         <table class="table table-striped" id="pairWiseTopicComparisons" width="100%">
-                                            <thead>
-                                                <tr>
-                                                    <th width="10%" scope="col">#</th>
-                                                    <th width="50%" scope="col">Alternative Hypothesis</th>
-                                                    <th width="20%" scope="col">P-Value</th>
-                                                    <th width="20%" scope="col">Statistic</th>
-                                                </tr>
-                                            </thead>
+                                            <tr>
+                                                <td style="font-weight:bold;">Alternative Hypothesis</td>
+                                                <td>{{ ptc["Alternative Hypothesis"]}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">P-value</td>
+                                                <td>{{ptc["P-value"]}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Statistic</td>
+                                                <td>{{ptc["Statistic"]}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Median Rank 1</td>
+                                                <td>{{ptc["Median Rank 1"]}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Median Rank 2</td>
+                                                <td>{{ptc["Median Rank 2"]}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Mean Rank 1</td>
+                                                <td>{{ptc["Mean Rank 1"]}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Mean Rank 2</td>
+                                                <td>{{ptc["Mean Rank 2"]}}</td>
+                                            </tr>
+
                                         </table>
                                     </div>
                                 </div>
@@ -1515,7 +1536,7 @@
         count++;
     }
 </script>
-
+<!--
 <script>
     'use strict'
     var tbl = document.getElementById('pairWiseTopicComparisons');
@@ -1552,7 +1573,7 @@
 
         count++;
     }
-</script>
+</script> -->
 
 <!--<script>
     'use strict'
@@ -3791,7 +3812,7 @@ function fade(opacity) {
 
 <script>
     document.getElementById('exportPairwiseTopicComparisons').addEventListener('click', function() {
-        window.location.href = '/export-pairwise-topic-conmparisons';
+        window.location.href = '/export-pairwise-topic-comparisons';
     });
 </script>
 

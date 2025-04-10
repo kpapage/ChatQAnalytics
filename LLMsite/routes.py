@@ -29,7 +29,7 @@ model_class_title_body = joblib.load('static/models/random_forest_model_title_bo
 res_dif_0_formatted = {}
 res_dif_1_formatted = {}
 res_growth_dict = {}
-ptc_dict = {}
+ptc = {}
 predict_class_new_docs_dict = {}
 predict_class_new_docs_title_body_dict={}
 
@@ -69,7 +69,7 @@ def export_growth_topic():
 
 @app.route("/export-pairwise-topic-comparisons")
 def export_pairwise_topic_comparisons():
-    df = pd.DataFrame(ptc_dict)
+    df = pd.DataFrame([ptc])
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, sheet_name='Sheet1', index=False)
@@ -262,7 +262,13 @@ def pairwise_topic_comparisons(topic_no_1,topic_no_2,metric,earliest_date,latest
     #pvalue_list=[res_G.pvalue,res_L.pvalue]
     #statistic_list=[res_G.statistic,res_L.statistic]
 
-    return({"Alternative Hypothesis":f"There is a statistical difference between Topic {topic_no_1} and Topic {topic_no_2}","P-value":res_two.pvalue,"Statistic":res_two.statistic, "Median Rank 1": median_rank_1,"Median Rank 2": median_rank_2, "Mean Rank 1": mean_rank_1,"Mean Rank 2": mean_rank_2})
+    return({"Alternative Hypothesis":f"There is a statistical difference between Topic {topic_no_1} and Topic {topic_no_2}",
+            "P-value":res_two.pvalue,
+            "Statistic":res_two.statistic, 
+            "Median Rank 1": median_rank_1,
+            "Median Rank 2": median_rank_2, 
+            "Mean Rank 1": mean_rank_1,
+            "Mean Rank 2": mean_rank_2})
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -333,8 +339,8 @@ def index():
     res_dif_1_formatted.clear()
     global res_growth_dict 
     res_growth_dict.clear()
-    global ptc_dict 
-    ptc_dict.clear()
+    global ptc 
+    ptc.clear()
     global predict_class_new_docs_dict
     predict_class_new_docs_dict.clear()
     global predict_class_new_docs_title_body_dict
@@ -1560,7 +1566,7 @@ def index():
                             top_10_collaboration_tools_response_time_reverse=top_10_collaboration_tools_response_time_reverse,
                             top_10_dev_tools_response_time_reverse=top_10_dev_tools_response_time_reverse,
                             top_10_sorted_ids_and_response_time_reverse=top_10_sorted_ids_and_response_time_reverse,
-                            predict_class_new_docs_dict = {},predict_class_new_docs_title_body_dict = {},res_dif_0_formatted = {}, res_dif_1_formatted = {}, res_growth_dict={}, ptc_dict = {}
+                            predict_class_new_docs_dict = {},predict_class_new_docs_title_body_dict = {},res_dif_0_formatted = {}, res_dif_1_formatted = {}, res_growth_dict={}, ptc = {}
                            )
 @app.route('/get_bert')
 def get_map():
@@ -2864,8 +2870,8 @@ def fetch():
     topic_no_2 = request.args.get('topicNo2')
     metric_option = request.args.get('metric')
     print(metric_option)
-    global ptc_dict
-    ptc_dict.clear()
+    global ptc
+    ptc.clear()
     if (topic_no_1 != None and topic_no_2 != None and metric_option != None) :
         if metric_option == 'views':
             metric=documents['views']
@@ -2876,12 +2882,7 @@ def fetch():
            
         
         ptc=pairwise_topic_comparisons(int(topic_no_1),int(topic_no_2),metric,earliest_date,latest_date)
-    
-        for key in ptc:
-            for i, value in enumerate(ptc[key]):
-                if i not in ptc_dict:
-                    ptc_dict[i] = []
-                ptc_dict[i].append(value)
+        print(ptc["Alternative Hypothesis"])
 
 
     return render_template('index.html',  questions=questions, question_count=question_count, users=users, labels=labels,
@@ -2986,7 +2987,7 @@ def fetch():
                             res_growth_dict = res_growth_dict, share_late = share_late, all_growth = all_growth,
                             avg_score = avg_score, pd = pd, avg_views = avg_views, avg_answers = avg_answers, 
                             avg_hours_to_first_answer = avg_hours_to_first_answer, topic_length_early = topic_length_early,
-                            topic_length_late = topic_length_late, share_early = share_early, self_grown = self_grown, ptc_dict = ptc_dict
+                            topic_length_late = topic_length_late, share_early = share_early, self_grown = self_grown, ptc = ptc
                            )
 
 if __name__ == "__main__":
