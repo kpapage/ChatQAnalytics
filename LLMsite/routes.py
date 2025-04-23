@@ -143,7 +143,7 @@ def topic_popularity_difficulty(earliest_date,latest_date):
     tp_pop_df_cols=['views','votes','comments']
 
 
-    tp_dif_mat= pd.DataFrame(0,columns=['Avg_answers','Perc_with_acc','Avg_hrs_to_first_answer',"Med_hrs_to_first_answer","PD"],index=range(len(model.topic_sizes_)))
+    tp_dif_mat= pd.DataFrame(0,columns=['Avg_answers','Perc_with_acc','Avg_hrs_to_first_answer',"PD"],index=range(len(model.topic_sizes_)))
 
 
     date_string = "2024-04-01 13:56:21Z"
@@ -169,10 +169,7 @@ def topic_popularity_difficulty(earliest_date,latest_date):
                         difference = date_second - date_first
                         date_list.append(difference.total_seconds())
                 if(len(date_list)!=0):
-                    tp_dif_mat['Med_hrs_to_first_answer'][tp_dif_mat.index[i]] = np.median(date_list) / 3600
-
                     tp_dif_mat['Avg_hrs_to_first_answer'][tp_dif_mat.index[i]] = sum(date_list) / (3600 * len(date_list))
-
     return(tp_pop_mat,tp_dif_mat)
 
 #Returns a dictionary containing information relevant to the growth of the topics according to their overall prevalence in two different dates
@@ -2839,7 +2836,7 @@ def fetch():
     avg_score=res_pop_dif[0]["Avg_score"].tolist()
     avg_views=res_pop_dif[0]["Avg_views"].tolist()
     avg_answers=res_pop_dif[1]["Avg_answers"].tolist()
-    avg_hours_to_first_answer=res_pop_dif[1]["Med_hrs_to_first_answer"].to_list()#res_pop_dif[1]["Avg_hrs_to_first_answer"].tolist()
+    avg_hours_to_first_answer=res_pop_dif[1]["Avg_hrs_to_first_answer"].tolist()
     pd=res_pop_dif[1]["PD"].tolist()
     
     global res_dif_0_formatted
