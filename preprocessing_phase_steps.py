@@ -55,7 +55,6 @@ def store_bertopic(documents):
         file.write(raw_html)
 
 
-    reduced_embeddings = UMAP(n_neighbors=10, n_components=2, min_dist=0.0, metric='cosine').fit_transform(embeddings)
     vis_documents=model.visualize_documents(docs=docs,embeddings=embeddings)
     raw_html=vis_documents.to_html()
 
