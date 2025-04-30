@@ -1,6 +1,6 @@
 pymongo
 flask
-bertopic==0.17
+bertopic==0.16.2
 numba==0.57.0
 joblib==1.2.0
 matplotlib
