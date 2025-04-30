@@ -17,11 +17,14 @@ from umap import UMAP
 from sklearn.ensemble import RandomForestClassifier
 from scipy.stats import mannwhitneyu, rankdata
 import statistics
+from flask import send_file
+
 
 app = Flask(__name__)
 
 documents = pd.read_csv("static/models/LLM-db.questions.csv")
-model = BERTopic.load("static/models/Bertopic_model_reduced_30_topics")
+model = BERTopic.load("static/models//Bertopic_model_reduced_30_topics")
+#model = BERTopic.load("static/models/test//Bertopic_model_reduced_30_topics")
 sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
 model_class = joblib.load('static/models/random_forest_model.joblib')
 model_class_title_body = joblib.load('static/models/random_forest_model_title_body.joblib')
@@ -1572,18 +1575,22 @@ def index():
 @app.route('/get_bert')
 def get_map():
     return render_template('topic_visualization/bert_visualize_docs_reduced.html')
+    #return send_file('templates/topic_visualization/test/bert_visualize_docs_reduced.html')
 
 @app.route('/get_bert2')
 def get_map2():
     return render_template('topic_visualization/bert_visualize_hierarchy_reduced.html')
+    #return send_file('templates/topic_visualization/test/bert_visualize_hierarchy_reduced.html')
 
 @app.route('/get_bert3')
 def get_map3():
     return render_template('topic_visualization/bert_visualize_reduced.html')
+    #return send_file('templates/topic_visualization/test/bert_visualize_reduced.html')
 
 @app.route('/get_ap_ii')
 def get_map4():
     return render_template('topic_visualization/ap_ii_network.html')
+    #return send_file('templates/topic_visualization/test/ap_ii_network.html')
 
 @app.route('/get_dates', methods=['GET'])
 def fetch():
