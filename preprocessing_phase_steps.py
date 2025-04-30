@@ -50,6 +50,7 @@ def store_bertopic(documents):
 
     #raw_html = vis_topics._repr_html_()
     raw_html=vis_topics.to_html()
+    #raw_html_wrapped = "{% raw %}\n" + raw_html + "\n{% endraw %}"
 
     with open("LLMsite/templates/topic_visualization/bert_visualize_reduced.html", "w", encoding="utf-8") as file:
         file.write(raw_html)
@@ -57,14 +58,18 @@ def store_bertopic(documents):
 
     vis_documents=model.visualize_documents(docs=docs,embeddings=embeddings)
     raw_html=vis_documents.to_html()
+    #raw_html_wrapped = "{% raw %}\n" + raw_html + "\n{% endraw %}"
 
     with open("LLMsite/templates/topic_visualization/bert_visualize_docs_reduced.html", "w", encoding="utf-8") as file:
         file.write(raw_html)
 
 
     hierarchical_topics = model.hierarchical_topics(docs)
+    raw_html = model.visualize_hierarchy(hierarchical_topics=hierarchical_topics,color_threshold=-1).to_html()
+    #raw_html_wrapped = "{% raw %}\n" + raw_html + "\n{% endraw %}"
+
     with open("LLMsite/templates/topic_visualization/bert_visualize_hierarchy_reduced.html", "w",encoding="utf-8") as file:
-        file.write(model.visualize_hierarchy(hierarchical_topics=hierarchical_topics,color_threshold=-1).to_html())
+        file.write(raw_html)
 
 store_bertopic(documents)
 
