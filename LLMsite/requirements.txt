@@ -7,3 +7,4 @@ matplotlib
 openpyxl
 XlsxWriter
 pyvis
+plotly==5.21.0
