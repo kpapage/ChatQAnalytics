@@ -657,11 +657,14 @@
                                 <h6 class="m-0 font-weight-bold text-primary">Topics Derived from Questions
                                     <div class="tooltip2"><i class="fas fa-info-circle"></i>
                                         <span class="tooltiptext">These figures contain the topics produced from the application of
-                                            the BertTopic and LDA algorithms on the question titles. In the first figure,
-                                            the points (which represent questions) are projected in a 2D space and showcase
+                                            the BERTopic algorithm on the question titles.
+                                            In the first figure, the points (which represent questions) are projected in a 2D space and showcase
                                             the different communities (or topics).
+                                            The second figure presents the hierachy of the topics using hierarchical clustering, where topics clustered
+                                            in the lower levels are more similar than others.
                                             In the third figure, the larger the circle, the most discussedis a topic while
                                             the distances between topics indicate how similar (or dissimilar) they are.
+                                            The final figure demonstrates the outcomes of tag cluster analysis using the Inclusion Index (for measuring tag association) and the Affinity Propagation clustering algorithm
                                         </span>
                                     </div>
                                 </h6>
@@ -696,7 +699,9 @@
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="predictClassNewDocsCard">
                                 <h6 class="m-0 font-weight-bold text-primary">Predict Class New Docs
                                     <div class="tooltip2"><i class="fas fa-info-circle"></i>
-                                        <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
+                                        <span class="tooltiptext"> The user can insert new questions separated by the character ';' to predict
+                                        whether they are relevant to ChatGPT or not and assign each one to topics. Two models are available, one for questions titles
+                                        and one for questions titles and bodies</span>
                                     </div>
                                 </h6>
                                 <div>
@@ -728,9 +733,9 @@
                     <div class="col-lg-12 mb-4">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="topicPopularityDifficultyCard">
-                                <h6 class="m-0 font-weight-bold text-primary">Topic Popularity Difficulty
+                                <h6 class="m-0 font-weight-bold text-primary">Topic Popularity and Difficulty
                                     <div class="tooltip2"><i class="fas fa-info-circle"></i>
-                                        <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
+                                        <span class="tooltiptext"> Measures for evaluating topic popularity (views and scores) and difficulty (answers) based on question metrics</span>
                                     </div>
                                 </h6>
                                 <button id="exportTopicPopularityDifficulty" type="button" class="btn btn-primary">Export</button>
@@ -776,7 +781,7 @@
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="growthTopicCard">
                                 <h6 class="m-0 font-weight-bold text-primary">Topic Growth
                                     <div class="tooltip2"><i class="fas fa-info-circle"></i>
-                                        <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
+                                        <span class="tooltiptext">Measures for evaluating self and relative growth of topics</span>
                                     </div>
                                 </h6>
                                 <button id="exportTopicGrowth" type="button" class="btn btn-primary">Export</button>
@@ -791,8 +796,8 @@
                                                 <th width="15%" scope="col">Topic Length Late</th>
                                                 <th width="15%" scope="col">Share Early</th>
                                                 <th width="15%" scope="col">Share Late</th>
-                                                <th width="15%" scope="col">Self Grown</th>
-                                                <th width="15%" scope="col">All Growth</th>
+                                                <th width="15%" scope="col">Self Growth</th>
+                                                <th width="15%" scope="col">Relative Growth</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -808,7 +813,7 @@
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="plot2dMetricsCard">
                                 <h6 class="m-0 font-weight-bold text-primary">Plot 2D Topic Metrics
                                     <div class="tooltip2"><i class="fas fa-info-circle"></i>
-                                        <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
+                                        <span class="tooltiptext">2D visualizations of topic evaluation measures (Popularity, Difficulty, Growth)</span>
                                     </div>
                                 </h6>
                             </div>
@@ -870,7 +875,7 @@
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" id="pairWiseTopicComparisonsCard">
                                 <h6 class="m-0 font-weight-bold text-primary">Pairwise Topic Comparisons
                                     <div class="tooltip2"><i class="fas fa-info-circle"></i>
-                                        <span class="tooltiptext"> Top 10 users based on the number of COVID-19 SSD questions they asked</span>
+                                        <span class="tooltiptext"> Topic comparison based on question metrics</span>
                                     </div>
                                 </h6>
                                 <button id="exportPairwiseTopicComparisons" type="button" class="btn btn-primary">Export</button>
